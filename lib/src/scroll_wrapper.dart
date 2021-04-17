@@ -114,19 +114,19 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
             child: widget.promptReplacementBuilder != null
                 ? widget.promptReplacementBuilder!(context, scrollToTop)
                 : Padding(
-                    padding: promptTheme.promptPadding,
+                    padding: promptTheme.padding,
                     child: ClipOval(
                       child: Material(
                         type: MaterialType.circle,
-                        color: promptTheme.promptColor ??
-                            Theme.of(context).accentColor,
+                        color:
+                            promptTheme.color ?? Theme.of(context).accentColor,
                         child: InkWell(
                           onTap: () {
                             scrollToTop();
                           },
                           child: Padding(
-                            padding: promptTheme.promptIconPadding,
-                            child: promptTheme.promptIcon ??
+                            padding: promptTheme.iconPadding,
+                            child: promptTheme.icon ??
                                 Icon(
                                   Icons.keyboard_arrow_up_rounded,
                                   color: Colors.white,
@@ -146,23 +146,22 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
 class PromptButtonTheme {
   /// Padding around the prompt button.
-  final EdgeInsets promptPadding;
+  final EdgeInsets padding;
 
   /// Padding around the icon inside the button.
-  final EdgeInsets promptIconPadding;
+  final EdgeInsets iconPadding;
 
   /// Icon inside the button.
-  final Icon? promptIcon;
+  final Icon? icon;
 
   /// Color of the prompt button. Defaults to the accent color of the current
   /// context's [Theme].
-  final Color? promptColor;
+  final Color? color;
 
   /// Custom prompt button theme to be given to a [ScrollWrapper].
   PromptButtonTheme(
-      {this.promptPadding =
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      this.promptIcon,
-      this.promptIconPadding = const EdgeInsets.all(8.0),
-      this.promptColor});
+      {this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      this.icon,
+      this.iconPadding = const EdgeInsets.all(8.0),
+      this.color});
 }

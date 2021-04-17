@@ -16,10 +16,10 @@ class ThemedPrompt extends StatelessWidget {
         promptDuration: Duration(milliseconds: 400),
         promptScrollOffset: 300,
         promptTheme: PromptButtonTheme(
-            promptIcon: Icon(Icons.arrow_circle_up, color: Colors.amber),
-            promptColor: Colors.deepPurpleAccent,
-            promptIconPadding: EdgeInsets.all(16),
-            promptPadding: EdgeInsets.all(32)),
+            icon: Icon(Icons.arrow_circle_up, color: Colors.amber),
+            color: Colors.deepPurpleAccent,
+            iconPadding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(32)),
         child: ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(

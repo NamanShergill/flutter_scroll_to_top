@@ -51,7 +51,7 @@ class NestedScrollViewExample extends StatelessWidget {
                           tileColor: Colors.grey.shade200,
                         ),
                       );
-                    }))
+                    })),
                   ],
                 ),
               );
