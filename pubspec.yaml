@@ -1,7 +1,6 @@
 name: flutter_scroll_to_top
 description: A wrapper to show a scroll to top prompt to the user.
 version: 1.0.0
-author: https://github.com/NamanShergill
 homepage: https://github.com/NamanShergill/flutter_scroll_to_top
 
 environment:
