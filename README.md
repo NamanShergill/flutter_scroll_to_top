@@ -8,7 +8,7 @@ Add the following to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^1.0.0
+  flutter_scroll_to_top: ^1.0.6
 ```
       
 Import the package
@@ -45,6 +45,8 @@ You can pass the following parameters to customise the prompt accordingly
 - `promptAlignment` - Where on the widget to align the prompt.
 - `promptDuration` - Duration it takes for the prompt to come into view/vanish.
 - `promptAnimationCurve` - Animation Curve that the prompt will follow when coming into view.
+- `scrollToTopDuration` -  Duration it takes for the page to scroll to the top on prompt button press.
+- `scrollToTopCurve` - Animation Curve for scrolling to the top.
 - `promptTheme` - You can pass `PromptButtonTheme` to modify the prompt button further. It has the following parameters:
     - `padding` - Padding around the prompt button.
     - `iconPadding` - adding around the icon inside the button.

@@ -42,6 +42,12 @@ class ScrollWrapper extends StatefulWidget {
   /// Duration it takes for the prompt to come into view/vanish.
   final Duration promptDuration;
 
+  /// Duration it takes for the page to scroll to the top on prompt button press.
+  final Duration scrollToTopDuration;
+
+  /// Animation Curve for scrolling to the top.
+  final Curve scrollToTopCurve;
+
   /// Animation Curve that the prompt will follow when coming into view.
   final Curve promptAnimationCurve;
 
@@ -50,16 +56,14 @@ class ScrollWrapper extends StatefulWidget {
     required this.scrollController,
     this.promptScrollOffset = 200,
     required this.child,
+    this.scrollToTopCurve = Curves.fastOutSlowIn,
+    this.scrollToTopDuration = const Duration(milliseconds: 500),
     this.promptDuration = const Duration(milliseconds: 500),
     this.promptAnimationCurve = Curves.fastOutSlowIn,
     this.promptAlignment = Alignment.topRight,
     this.promptTheme,
     this.promptReplacementBuilder,
-  })  : assert(
-            promptReplacementBuilder != null ? promptTheme == null : true,
-            'promptTheme is not used if a custom prompt is being shown. '
-            'Remove either the promptTheme or the promptReplacementBuilder.'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _ScrollWrapperState createState() => _ScrollWrapperState();
@@ -79,8 +83,8 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   void scrollToTop() {
     widget.scrollController.animateTo(
         widget.scrollController.position.minScrollExtent,
-        duration: Duration(milliseconds: 250),
-        curve: Curves.easeIn);
+        duration: widget.scrollToTopDuration,
+        curve: widget.scrollToTopCurve);
   }
 
   @override

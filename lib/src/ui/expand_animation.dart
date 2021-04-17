@@ -77,14 +77,14 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: mainAxisAlignment(widget.alignment),
-      children: [
-        SizeTransition(
-          sizeFactor: animation,
-          child: widget.child,
-        ),
-      ],
+    return SizeTransition(
+      sizeFactor: animation,
+      child: Row(
+        children: [
+          Expanded(
+              child: Align(alignment: widget.alignment, child: widget.child)),
+        ],
+      ),
     );
   }
 }
