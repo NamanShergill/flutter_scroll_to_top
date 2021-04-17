@@ -35,7 +35,7 @@ ScrollWrapper(
         ),
       ),
 ```
-![basic_prompt](https://user-images.githubusercontent.com/33877135/115117228-2564dd00-9fbb-11eb-8f83-4feacf2560d1.gif)
+<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117228-2564dd00-9fbb-11eb-8f83-4feacf2560d1.gif" width="300" ></a>
 
 
 ## Customisation
@@ -75,7 +75,7 @@ ScrollWrapper(
         ),
       ),
 ```
-![themed_prompt](https://user-images.githubusercontent.com/33877135/115117233-2ac22780-9fbb-11eb-876e-171103e9ef91.gif)
+<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/themed_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117233-2ac22780-9fbb-11eb-876e-171103e9ef91.gif" width="300" ></a>
 
 
 ## Custom Prompt Widget
@@ -105,8 +105,7 @@ ScrollWrapper(
         ),
       )
 ```
-![custom_prompt](https://user-images.githubusercontent.com/33877135/115117236-2e55ae80-9fbb-11eb-95c8-c8467797a877.gif)
-
+<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117236-2e55ae80-9fbb-11eb-95c8-c8467797a877.gif" width="300" ></a>
 
 ## NestsedScrollView Implimentation
 
@@ -114,5 +113,5 @@ The implimentation is similar, just wrap your scrollable body with the `ScrollWr
 
 [Check the example for code.](https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart)
 
-![nested_scroll_view](https://user-images.githubusercontent.com/33877135/115117240-3281cc00-9fbb-11eb-8525-cbca1d64e902.gif)
+<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart"><img src="https://user-images.githubusercontent.com/33877135/115117240-3281cc00-9fbb-11eb-8525-cbca1d64e902.gif" width="300" ></a>
 
