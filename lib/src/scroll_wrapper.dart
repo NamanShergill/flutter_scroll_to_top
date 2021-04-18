@@ -51,6 +51,10 @@ class ScrollWrapper extends StatefulWidget {
   /// Animation Curve that the prompt will follow when coming into view.
   final Curve promptAnimationCurve;
 
+  /// [PromptAnimation] type that the prompt will follow when coming into view.
+  /// Default is [PromptAnimation.size].
+  final PromptAnimation promptAnimationType;
+
   ScrollWrapper({
     Key? key,
     required this.scrollController,
@@ -62,6 +66,7 @@ class ScrollWrapper extends StatefulWidget {
     this.promptAnimationCurve = Curves.fastOutSlowIn,
     this.promptAlignment = Alignment.topRight,
     this.promptTheme,
+    this.promptAnimationType = PromptAnimation.size,
     this.promptReplacementBuilder,
   }) : super(key: key);
 
@@ -112,6 +117,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
           alignment: widget.promptAlignment,
           child: SizeExpandedSection(
             expand: scrollTopAtOffset,
+            animType: widget.promptAnimationType,
             duration: widget.promptDuration,
             curve: widget.promptAnimationCurve,
             alignment: widget.promptAlignment,
@@ -169,3 +175,5 @@ class PromptButtonTheme {
       this.iconPadding = const EdgeInsets.all(8.0),
       this.color});
 }
+
+enum PromptAnimation { fade, scale, size }

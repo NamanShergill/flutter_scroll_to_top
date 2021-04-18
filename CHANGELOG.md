@@ -1,3 +1,7 @@
+## [1.1.0] - 18 April 2021.
+
+* Added `promptAnimationType` to specify the kind of animation the prompt shows up with.
+
 ## [1.0.6] - 17 April 2021.
 
 * Added `scrollToTopDuration` and `scrollToTopCurve` parameters.

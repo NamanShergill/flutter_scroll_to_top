@@ -13,9 +13,7 @@ class CustomPrompt extends StatelessWidget {
         scrollController: scrollController,
         promptReplacementBuilder: (BuildContext context, Function function) {
           return MaterialButton(
-            onPressed: () {
-              function();
-            },
+            onPressed: () => function(),
             child: Text('Scroll to top'),
           );
         },

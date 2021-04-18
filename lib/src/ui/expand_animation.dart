@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class SizeExpandedSection extends StatefulWidget {
   final Widget child;
@@ -6,9 +7,11 @@ class SizeExpandedSection extends StatefulWidget {
   final Alignment alignment;
   final Curve curve;
   final Duration duration;
+  final PromptAnimation animType;
   SizeExpandedSection(
       {required this.expand,
       required this.child,
+      required this.animType,
       required this.curve,
       required this.duration,
       required this.alignment,
@@ -60,31 +63,29 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
     super.dispose();
   }
 
-  MainAxisAlignment mainAxisAlignment(Alignment alignment) {
-    if (alignment == Alignment.topCenter ||
-        alignment == Alignment.center ||
-        alignment == Alignment.bottomCenter)
-      return MainAxisAlignment.center;
-    else if (alignment == Alignment.topLeft ||
-        alignment == Alignment.centerLeft ||
-        alignment == Alignment.bottomLeft)
-      return MainAxisAlignment.start;
-    else if (alignment == Alignment.topRight ||
-        alignment == Alignment.centerRight ||
-        alignment == Alignment.bottomRight) return MainAxisAlignment.end;
-    return MainAxisAlignment.center;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: Row(
-        children: [
-          Expanded(
-              child: Align(alignment: widget.alignment, child: widget.child)),
-        ],
-      ),
-    );
+    if (widget.animType == PromptAnimation.fade)
+      return FadeTransition(
+        opacity: animation,
+        child: widget.child,
+      );
+    else if (widget.animType == PromptAnimation.scale)
+      return ScaleTransition(
+        scale: animation,
+        child: widget.child,
+      );
+    else if (widget.animType == PromptAnimation.size)
+      return SizeTransition(
+        sizeFactor: animation,
+        child: Row(
+          children: [
+            Expanded(
+                child: Align(alignment: widget.alignment, child: widget.child)),
+          ],
+        ),
+      );
+    else
+      return Container();
   }
 }
