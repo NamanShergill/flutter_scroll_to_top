@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
@@ -110,42 +111,49 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
       },
       child: widget.child,
     );
-    child = Stack(
+    child = Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        child,
-        Align(
-          alignment: widget.promptAlignment,
-          child: SizeExpandedSection(
-            expand: scrollTopAtOffset,
-            animType: widget.promptAnimationType,
-            duration: widget.promptDuration,
-            curve: widget.promptAnimationCurve,
-            alignment: widget.promptAlignment,
-            child: widget.promptReplacementBuilder != null
-                ? widget.promptReplacementBuilder!(context, scrollToTop)
-                : Padding(
-                    padding: promptTheme.padding,
-                    child: ClipOval(
-                      child: Material(
-                        type: MaterialType.circle,
-                        color:
-                            promptTheme.color ?? Theme.of(context).accentColor,
-                        child: InkWell(
-                          onTap: () {
-                            scrollToTop();
-                          },
-                          child: Padding(
-                            padding: promptTheme.iconPadding,
-                            child: promptTheme.icon ??
-                                Icon(
-                                  Icons.keyboard_arrow_up_rounded,
-                                  color: Colors.white,
+        Flexible(
+          child: Stack(
+            children: [
+              child,
+              Align(
+                alignment: widget.promptAlignment,
+                child: SizeExpandedSection(
+                  expand: scrollTopAtOffset,
+                  animType: widget.promptAnimationType,
+                  duration: widget.promptDuration,
+                  curve: widget.promptAnimationCurve,
+                  alignment: widget.promptAlignment,
+                  child: widget.promptReplacementBuilder != null
+                      ? widget.promptReplacementBuilder!(context, scrollToTop)
+                      : Padding(
+                          padding: promptTheme.padding,
+                          child: ClipOval(
+                            child: Material(
+                              type: MaterialType.circle,
+                              color: promptTheme.color ??
+                                  Theme.of(context).accentColor,
+                              child: InkWell(
+                                onTap: () {
+                                  scrollToTop();
+                                },
+                                child: Padding(
+                                  padding: promptTheme.iconPadding,
+                                  child: promptTheme.icon ??
+                                      Icon(
+                                        Icons.keyboard_arrow_up_rounded,
+                                        color: Colors.white,
+                                      ),
                                 ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
