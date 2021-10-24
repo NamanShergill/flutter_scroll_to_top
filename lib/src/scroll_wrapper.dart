@@ -56,6 +56,9 @@ class ScrollWrapper extends StatefulWidget {
   /// Default is [PromptAnimation.size].
   final PromptAnimation promptAnimationType;
 
+  /// BorderRadius for 
+  final BorderRadius? borderRadius;
+
   ScrollWrapper({
     Key? key,
     required this.scrollController,
@@ -69,6 +72,7 @@ class ScrollWrapper extends StatefulWidget {
     this.promptTheme,
     this.promptAnimationType = PromptAnimation.size,
     this.promptReplacementBuilder,
+    this.borderRadius,
   }) : super(key: key);
 
   @override
@@ -136,6 +140,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                               color: promptTheme.color ??
                                   Theme.of(context).accentColor,
                               child: InkWell(
+                                borderRadius: widget.borderRadius,
                                 onTap: () {
                                   scrollToTop();
                                 },
