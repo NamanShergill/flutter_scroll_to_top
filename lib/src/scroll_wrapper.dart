@@ -97,12 +97,12 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   Widget build(BuildContext context) {
     Widget child = NotificationListener<ScrollNotification>(
       onNotification: (notification) {
-        if (notification.metrics.pixels > widget.promptScrollOffset &&
+        if (widget.scrollController.offset > widget.promptScrollOffset &&
             !scrollTopAtOffset)
           setState(() {
             scrollTopAtOffset = true;
           });
-        else if (notification.metrics.pixels <= widget.promptScrollOffset &&
+        else if (widget.scrollController.offset <= widget.promptScrollOffset &&
             scrollTopAtOffset)
           setState(() {
             scrollTopAtOffset = false;
