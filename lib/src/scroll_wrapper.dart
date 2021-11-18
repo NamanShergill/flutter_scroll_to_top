@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
 typedef ReplacementBuilder = Widget Function(
-    BuildContext context, Function function);
+    BuildContext context, VoidCallback function);
 
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
@@ -80,91 +79,100 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   @override
   void initState() {
-    promptTheme = widget.promptTheme ?? PromptButtonTheme();
     super.initState();
+    promptTheme = widget.promptTheme ?? PromptButtonTheme();
+  }
+
+  @override
+  void didUpdateWidget(covariant ScrollWrapper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.promptTheme != widget.promptTheme) {
+      promptTheme = widget.promptTheme ?? PromptButtonTheme();
+    }
   }
 
   bool scrollTopAtOffset = false;
 
   void scrollToTop() {
     widget.scrollController.animateTo(
-        widget.scrollController.position.minScrollExtent,
-        duration: widget.scrollToTopDuration,
-        curve: widget.scrollToTopCurve);
+      widget.scrollController.position.minScrollExtent,
+      duration: widget.scrollToTopDuration,
+      curve: widget.scrollToTopCurve,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget child = NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        if (notification.metrics.pixels > widget.promptScrollOffset &&
-            !scrollTopAtOffset)
-          setState(() {
-            scrollTopAtOffset = true;
-          });
-        else if (notification.metrics.pixels <= widget.promptScrollOffset &&
-            scrollTopAtOffset)
-          setState(() {
-            scrollTopAtOffset = false;
-          });
-        return true;
-      },
-      child: widget.child,
-    );
-    child = Column(
-      mainAxisSize: MainAxisSize.min,
+    Widget child() {
+      return NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.pixels > widget.promptScrollOffset &&
+              !scrollTopAtOffset)
+            setState(() {
+              scrollTopAtOffset = true;
+            });
+          else if (notification.metrics.pixels <= widget.promptScrollOffset &&
+              scrollTopAtOffset)
+            setState(() {
+              scrollTopAtOffset = false;
+            });
+          return true;
+        },
+        child: widget.child,
+      );
+    }
+
+    return Stack(
       children: [
-        Flexible(
-          child: Stack(
-            children: [
-              child,
-              Align(
-                alignment: widget.promptAlignment,
-                child: SizeExpandedSection(
-                  expand: scrollTopAtOffset,
-                  animType: widget.promptAnimationType,
-                  duration: widget.promptDuration,
-                  curve: widget.promptAnimationCurve,
-                  alignment: widget.promptAlignment,
-                  child: widget.promptReplacementBuilder != null
-                      ? widget.promptReplacementBuilder!(context, scrollToTop)
-                      : Padding(
-                          padding: promptTheme.padding,
-                          child: ClipOval(
-                            child: Material(
-                              type: MaterialType.circle,
-                              color: promptTheme.color ??
-                                  Theme.of(context).accentColor,
-                              child: InkWell(
-                                onTap: () {
-                                  scrollToTop();
-                                },
-                                child: Padding(
-                                  padding: promptTheme.iconPadding,
-                                  child: promptTheme.icon ??
-                                      Icon(
-                                        Icons.keyboard_arrow_up_rounded,
-                                        color: Colors.white,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ),
+        child(),
+        Align(
+          alignment: widget.promptAlignment,
+          child: SizeExpandedSection(
+            expand: scrollTopAtOffset,
+            animType: widget.promptAnimationType,
+            duration: widget.promptDuration,
+            curve: widget.promptAnimationCurve,
+            alignment: widget.promptAlignment,
+            child: widget.promptReplacementBuilder != null
+                ? widget.promptReplacementBuilder!(context, scrollToTop)
+                : Padding(
+              padding: promptTheme.padding,
+              child: Material(
+                elevation: promptTheme.elevation ?? 0,
+                clipBehavior: Clip.antiAlias,
+                type: MaterialType.circle,
+                color: promptTheme.color ??
+                    Theme.of(context).appBarTheme.backgroundColor ??
+                    Theme.of(context).primaryColor,
+                child: InkWell(
+                  onTap: scrollToTop,
+                  child: Padding(
+                    padding: promptTheme.iconPadding,
+                    child: promptTheme.icon ??
+                        Icon(
+                          Icons.keyboard_arrow_up_rounded,
+                          color: Theme.of(context)
+                              .appBarTheme
+                              .foregroundColor ??
+                              Colors.white,
                         ),
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ],
     );
-    return child;
   }
 }
 
 class PromptButtonTheme {
   /// Padding around the prompt button.
   final EdgeInsets padding;
+
+  /// Elevation of the button.
+  final double? elevation;
 
   /// Padding around the icon inside the button.
   final EdgeInsets iconPadding;
@@ -177,11 +185,13 @@ class PromptButtonTheme {
   final Color? color;
 
   /// Custom prompt button theme to be given to a [ScrollWrapper].
-  PromptButtonTheme(
-      {this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      this.icon,
-      this.iconPadding = const EdgeInsets.all(8.0),
-      this.color});
+  PromptButtonTheme({
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.icon,
+    this.iconPadding = const EdgeInsets.all(8.0),
+    this.elevation = 0,
+    this.color,
+  });
 }
 
 enum PromptAnimation { fade, scale, size }
