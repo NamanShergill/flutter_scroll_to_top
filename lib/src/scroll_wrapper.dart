@@ -19,6 +19,7 @@ class ScrollWrapper extends StatefulWidget {
       this.scrollDirection = Axis.vertical,
       bool? primary,
       this.reverse = false,
+      this.onPromptTap,
       this.promptScrollOffset = 200,
       this.alwaysVisibleAtOffset = false,
       this.scrollToTopCurve = Curves.fastOutSlowIn,
@@ -70,6 +71,9 @@ class ScrollWrapper extends StatefulWidget {
   ///
   /// Defaults to false.
   final bool reverse;
+
+  /// Callback function to be executed when the prompt is tapped.
+  final VoidCallback? onPromptTap;
 
   /// At what scroll offset to show the prompt on.
   final double promptScrollOffset;
@@ -225,6 +229,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   bool _scrollTopAtOffset = false;
 
   void _scrollToTop() {
+    widget.onPromptTap?.call();
     _scrollController.animateTo(
       _scrollController.position.minScrollExtent,
       duration: widget.scrollToTopDuration,
