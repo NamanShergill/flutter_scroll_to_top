@@ -1,11 +1,11 @@
-## [2.0.0] - 21 November 2021.
+## [2.0.1] - 22 November 2021.
 - ***BREAKING CHANGE*** - Replaced `child` parameter with `builder`.
 - ***BREAKING CHANGE*** - Renamed `promptScrollOffset` to `enabledAtOffset`.
 - Added `scrollDirection`, `primary`, `reverse`, `scrollOffsetUntilVisible` and `alwaysVisibleAtOffset` parameters.
 - Added `onPromptTap` callback.
 - Made `scrollController` parameter nullable and added `PrimaryScrollController.of(context)` fallback.
 - Better behaviour for horizontal ScrollViews.
-- Changed default behaviour to show prompt on upwards scroll. Can be disabled by setting `alwaysVisibleAtOffset` to false.
+- Changed default behaviour to only show prompt on upwards scroll. Can be disabled by setting `alwaysVisibleAtOffset` to true.
 - Made `ScrollWrapper` and `PromptButtonTheme` constructors const.
 
 ## [1.2.0] - 21 November 2021.
