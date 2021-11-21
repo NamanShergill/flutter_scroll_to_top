@@ -84,7 +84,7 @@ class ScrollWrapper extends StatefulWidget {
   /// Default value is false.
   final bool alwaysVisibleAtOffset;
 
-  /// If [alwaysVisibleAtOffset] is true, what offset should the user scroll in
+  /// If [alwaysVisibleAtOffset] is false, what offset should the user scroll in
   /// the opposite direction (ex, upwards scroll on a non-reversed vertical
   /// ScrollView) before the prompt becomes visible.
   final double scrollOffsetUntilVisible;

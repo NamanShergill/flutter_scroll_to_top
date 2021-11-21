@@ -9,9 +9,6 @@ class BasicPrompt extends StatelessWidget {
         title: const Text('Basic Prompt'),
       ),
       body: ScrollWrapper(
-        onPromptTap: () {
-          print('top');
-        },
         builder: (context, properties) => ListView.builder(
           controller: properties.scrollController,
           scrollDirection: properties.scrollDirection,
@@ -19,12 +16,9 @@ class BasicPrompt extends StatelessWidget {
           primary: properties.primary,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 50,
-              child: ListTile(
-                title: Text('Tile $index'),
-                tileColor: Colors.grey.shade200,
-              ),
+            child: ListTile(
+              title: Text('Tile $index'),
+              tileColor: Colors.grey.shade200,
             ),
           ),
         ),

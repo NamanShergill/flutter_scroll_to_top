@@ -1,6 +1,6 @@
 ## [2.0.0] - 21 November 2021.
-- *BREAKING CHANGE* - Replaced `child` parameter with `builder`.
-- *BREAKING CHANGE* - Renamed `promptScrollOffset` to `enabledAtOffset`.
+- ***BREAKING CHANGE*** - Replaced `child` parameter with `builder`.
+- ***BREAKING CHANGE*** - Renamed `promptScrollOffset` to `enabledAtOffset`.
 - Added `scrollDirection`, `primary`, `reverse`, `scrollOffsetUntilVisible` and `alwaysVisibleAtOffset` parameters.
 - Added `onPromptTap` callback.
 - Made `scrollController` parameter nullable and added `PrimaryScrollController.of(context)` fallback.
