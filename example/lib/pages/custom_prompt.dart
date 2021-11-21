@@ -15,7 +15,7 @@ class CustomPrompt extends StatelessWidget {
             child: Text('Scroll to top'),
           );
         },
-        builder: (scrollController) => ListView.builder(
+        builder: (scrollController, scrollDirection) => ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),

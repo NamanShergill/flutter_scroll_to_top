@@ -5,7 +5,8 @@ import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 typedef ReplacementBuilder = Widget Function(
     BuildContext context, VoidCallback function);
 
-typedef ScrollBuilder = Widget Function(ScrollController scrollController);
+typedef ScrollBuilder = Widget Function(
+    ScrollController scrollController, Axis scrollDirection);
 
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
@@ -21,7 +22,7 @@ class ScrollWrapper extends StatefulWidget {
     this.scrollToTopDuration = const Duration(milliseconds: 500),
     this.promptDuration = const Duration(milliseconds: 500),
     this.promptAnimationCurve = Curves.fastOutSlowIn,
-    this.promptAlignment = Alignment.topRight,
+    Alignment? promptAlignment,
     this.promptTheme,
     this.promptAnimationType = PromptAnimation.size,
     this.promptReplacementBuilder,
@@ -33,6 +34,10 @@ class ScrollWrapper extends StatefulWidget {
         primary = primary ??
             scrollController == null &&
                 identical(scrollDirection, Axis.vertical),
+        promptAlignment = promptAlignment ??
+            (identical(scrollDirection, Axis.vertical)
+                ? Alignment.topRight
+                : Alignment.topLeft),
         super(key: key);
 
   /// [ScrollController] of the scrollable widget to scroll to the top of when
@@ -161,7 +166,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.builder(_scrollController),
+        widget.builder(_scrollController, widget.scrollDirection),
         Align(
           alignment: widget.promptAlignment,
           child: SizeExpandedSection(
@@ -189,7 +194,9 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                           padding: _promptTheme.iconPadding,
                           child: _promptTheme.icon ??
                               Icon(
-                                Icons.keyboard_arrow_up_rounded,
+                                widget.scrollDirection == Axis.vertical
+                                    ? Icons.keyboard_arrow_up_rounded
+                                    : Icons.keyboard_arrow_left_rounded,
                                 color: Theme.of(context)
                                         .appBarTheme
                                         .foregroundColor ??

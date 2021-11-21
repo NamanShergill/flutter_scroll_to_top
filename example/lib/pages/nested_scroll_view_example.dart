@@ -35,7 +35,8 @@ class NestedScrollViewExample extends StatelessWidget {
                     child: Text('Scroll to top'),
                   );
                 },
-                builder: (scrollController) => CustomScrollView(
+                builder: (scrollController, scrollDirection) =>
+                    CustomScrollView(
                   slivers: [
                     SliverOverlapInjector(
                       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(

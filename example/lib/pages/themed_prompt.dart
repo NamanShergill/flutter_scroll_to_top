@@ -18,7 +18,7 @@ class ThemedPrompt extends StatelessWidget {
             color: Colors.deepPurpleAccent,
             iconPadding: EdgeInsets.all(16),
             padding: EdgeInsets.all(32)),
-        builder: (scrollController) => ListView.builder(
+        builder: (scrollController, scrollDirection) => ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
