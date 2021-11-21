@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class BasicPrompt extends StatelessWidget {
-  final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,8 +9,7 @@ class BasicPrompt extends StatelessWidget {
         title: Text('Basic Prompt'),
       ),
       body: ScrollWrapper(
-        scrollController: scrollController,
-        child: ListView.builder(
+        builder: (scrollController) => ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),

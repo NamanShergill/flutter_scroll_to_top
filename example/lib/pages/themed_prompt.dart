@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class ThemedPrompt extends StatelessWidget {
-  final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +9,6 @@ class ThemedPrompt extends StatelessWidget {
         title: Text('Themed Prompt'),
       ),
       body: ScrollWrapper(
-        scrollController: scrollController,
         promptAlignment: Alignment.topCenter,
         promptAnimationCurve: Curves.elasticInOut,
         promptDuration: Duration(milliseconds: 400),
@@ -20,7 +18,7 @@ class ThemedPrompt extends StatelessWidget {
             color: Colors.deepPurpleAccent,
             iconPadding: EdgeInsets.all(16),
             padding: EdgeInsets.all(32)),
-        child: ListView.builder(
+        builder: (scrollController) => ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
