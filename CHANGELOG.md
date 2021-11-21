@@ -1,3 +1,9 @@
+## [1.2.0] - 21 November 2021.
+
+- Added elevation to `PromptButtonTheme`
+- Added `AppBarTheme`'s colors as default to the button, so it matches the AppBar
+- Added a `didUpdateWidget` override, so the `PromptButtonTheme` updates on hot reload
+
 ## [1.1.0] - 18 April 2021.
 
 * Added `promptAnimationType` to specify the kind of animation the prompt shows up with.

@@ -136,30 +136,32 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
             child: widget.promptReplacementBuilder != null
                 ? widget.promptReplacementBuilder!(context, scrollToTop)
                 : Padding(
-              padding: promptTheme.padding,
-              child: Material(
-                elevation: promptTheme.elevation ?? 0,
-                clipBehavior: Clip.antiAlias,
-                type: MaterialType.circle,
-                color: promptTheme.color ??
-                    Theme.of(context).appBarTheme.backgroundColor ??
-                    Theme.of(context).primaryColor,
-                child: InkWell(
-                  onTap: scrollToTop,
-                  child: Padding(
-                    padding: promptTheme.iconPadding,
-                    child: promptTheme.icon ??
-                        Icon(
-                          Icons.keyboard_arrow_up_rounded,
-                          color: Theme.of(context)
-                              .appBarTheme
-                              .foregroundColor ??
-                              Colors.white,
+                    padding: promptTheme.padding,
+                    child: Material(
+                      elevation: promptTheme.elevation ??
+                          Theme.of(context).appBarTheme.elevation ??
+                          4,
+                      clipBehavior: Clip.antiAlias,
+                      type: MaterialType.circle,
+                      color: promptTheme.color ??
+                          Theme.of(context).appBarTheme.backgroundColor ??
+                          Theme.of(context).primaryColor,
+                      child: InkWell(
+                        onTap: scrollToTop,
+                        child: Padding(
+                          padding: promptTheme.iconPadding,
+                          child: promptTheme.icon ??
+                              Icon(
+                                Icons.keyboard_arrow_up_rounded,
+                                color: Theme.of(context)
+                                        .appBarTheme
+                                        .foregroundColor ??
+                                    Colors.white,
+                              ),
                         ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
         ),
       ],
@@ -189,7 +191,7 @@ class PromptButtonTheme {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     this.icon,
     this.iconPadding = const EdgeInsets.all(8.0),
-    this.elevation = 0,
+    this.elevation,
     this.color,
   });
 }
