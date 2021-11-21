@@ -12,25 +12,26 @@ typedef ScrollBuilder = Widget Function(
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
 class ScrollWrapper extends StatefulWidget {
-  const ScrollWrapper(
-      {Key? key,
-      required this.builder,
-      this.scrollController,
-      this.scrollDirection = Axis.vertical,
-      bool? primary,
-      this.reverse = false,
-      this.onPromptTap,
-      this.promptScrollOffset = 200,
-      this.alwaysVisibleAtOffset = false,
-      this.scrollToTopCurve = Curves.fastOutSlowIn,
-      this.scrollToTopDuration = const Duration(milliseconds: 500),
-      this.promptDuration = const Duration(milliseconds: 500),
-      this.promptAnimationCurve = Curves.fastOutSlowIn,
-      this.promptAlignment,
-      this.promptTheme,
-      this.promptAnimationType = PromptAnimation.size,
-      this.promptReplacementBuilder})
-      : assert(
+  const ScrollWrapper({
+    Key? key,
+    required this.builder,
+    this.scrollController,
+    this.scrollDirection = Axis.vertical,
+    bool? primary,
+    this.reverse = false,
+    this.onPromptTap,
+    this.scrollOffsetUntilVisible = 200,
+    this.enabledAtOffset = 200,
+    this.alwaysVisibleAtOffset = false,
+    this.scrollToTopCurve = Curves.fastOutSlowIn,
+    this.scrollToTopDuration = const Duration(milliseconds: 500),
+    this.promptDuration = const Duration(milliseconds: 500),
+    this.promptAnimationCurve = Curves.fastOutSlowIn,
+    this.promptAlignment,
+    this.promptTheme,
+    this.promptAnimationType = PromptAnimation.size,
+    this.promptReplacementBuilder,
+  })  : assert(
           !(scrollController != null && primary == true),
           'Primary ScrollViews obtain their ScrollController via inheritance from a PrimaryScrollController widget. '
           'You cannot both set primary to true and pass an explicit controller.',
@@ -75,13 +76,18 @@ class ScrollWrapper extends StatefulWidget {
   /// Callback function to be executed when the prompt is tapped.
   final VoidCallback? onPromptTap;
 
-  /// At what scroll offset to show the prompt on.
-  final double promptScrollOffset;
+  /// At what scroll offset to enable the prompt on.
+  final double enabledAtOffset;
 
   /// If the prompt is to be always visible at the provided offset. Setting this
   /// to false only shows the prompt when the user starts scrolling upwards.
   /// Default value is false.
   final bool alwaysVisibleAtOffset;
+
+  /// If [alwaysVisibleAtOffset] is true, what offset should the user scroll in
+  /// the opposite direction (ex, upwards scroll on a non-reversed vertical
+  /// ScrollView) before the prompt becomes visible.
+  final double scrollOffsetUntilVisible;
 
   /// **Replace the prompt button with your own custom widget. Returns the**
   /// **[BuildContext] and the [Function] to call to scroll to top.**
@@ -198,27 +204,36 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
+  double? _currentScrollStartOffset;
+
   void _setupListener() {
     _scrollController.addListener(() {
       final direction = _scrollController.position.userScrollDirection;
-      if (direction == ScrollDirection.forward ||
-          widget.alwaysVisibleAtOffset) {
+      if (widget.alwaysVisibleAtOffset) {
         _checkState();
+      } else if (direction == ScrollDirection.forward) {
+        _currentScrollStartOffset =
+            _currentScrollStartOffset ?? _scrollController.offset;
+        if (_currentScrollStartOffset! - _scrollController.offset >
+            widget.scrollOffsetUntilVisible) {
+          _checkState();
+        }
       } else {
         setState(() {
           _scrollTopAtOffset = false;
         });
+        _currentScrollStartOffset = null;
       }
     });
   }
 
   void _checkState() {
-    if (_scrollController.offset > widget.promptScrollOffset &&
+    if (_scrollController.offset > widget.enabledAtOffset &&
         !_scrollTopAtOffset) {
       setState(() {
         _scrollTopAtOffset = true;
       });
-    } else if (_scrollController.offset <= widget.promptScrollOffset &&
+    } else if (_scrollController.offset <= widget.enabledAtOffset &&
         _scrollTopAtOffset) {
       setState(() {
         _scrollTopAtOffset = false;

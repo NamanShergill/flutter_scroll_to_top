@@ -12,7 +12,8 @@ class ThemedPrompt extends StatelessWidget {
         promptAlignment: Alignment.topCenter,
         promptAnimationCurve: Curves.elasticInOut,
         promptDuration: const Duration(milliseconds: 400),
-        promptScrollOffset: 300,
+        enabledAtOffset: 300,
+        scrollOffsetUntilVisible: 500,
         promptTheme: const PromptButtonTheme(
             icon: Icon(Icons.arrow_circle_up, color: Colors.amber),
             color: Colors.deepPurpleAccent,

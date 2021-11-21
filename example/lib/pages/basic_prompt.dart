@@ -9,6 +9,9 @@ class BasicPrompt extends StatelessWidget {
         title: const Text('Basic Prompt'),
       ),
       body: ScrollWrapper(
+        onPromptTap: () {
+          print('top');
+        },
         builder: (context, properties) => ListView.builder(
           controller: properties.scrollController,
           scrollDirection: properties.scrollDirection,
