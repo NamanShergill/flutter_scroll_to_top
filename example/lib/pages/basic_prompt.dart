@@ -6,7 +6,7 @@ class BasicPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Basic Prompt'),
+        title: const Text('Basic Prompt'),
       ),
       body: ScrollWrapper(
         builder: (scrollController, scrollDirection) => ListView.builder(

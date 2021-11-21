@@ -12,7 +12,7 @@ typedef ScrollBuilder = Widget Function(
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
 class ScrollWrapper extends StatefulWidget {
-  ScrollWrapper(
+  const ScrollWrapper(
       {Key? key,
       required this.builder,
       this.scrollController,
@@ -160,15 +160,16 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _checkState() {
     if (_scrollController.offset > widget.promptScrollOffset &&
-        !_scrollTopAtOffset)
+        !_scrollTopAtOffset) {
       setState(() {
         _scrollTopAtOffset = true;
       });
-    else if (_scrollController.offset <= widget.promptScrollOffset &&
-        _scrollTopAtOffset)
+    } else if (_scrollController.offset <= widget.promptScrollOffset &&
+        _scrollTopAtOffset) {
       setState(() {
         _scrollTopAtOffset = false;
       });
+    }
   }
 
   bool _scrollTopAtOffset = false;
@@ -233,6 +234,14 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 }
 
 class PromptButtonTheme {
+  /// Custom prompt button theme to be given to a [ScrollWrapper].
+  PromptButtonTheme({
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.icon,
+    this.iconPadding = const EdgeInsets.all(8.0),
+    this.elevation,
+    this.color,
+  });
   /// Padding around the prompt button.
   final EdgeInsets padding;
 
@@ -249,14 +258,6 @@ class PromptButtonTheme {
   /// context's [Theme].
   final Color? color;
 
-  /// Custom prompt button theme to be given to a [ScrollWrapper].
-  PromptButtonTheme({
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-    this.icon,
-    this.iconPadding = const EdgeInsets.all(8.0),
-    this.elevation,
-    this.color,
-  });
 }
 
 enum PromptAnimation { fade, scale, size }

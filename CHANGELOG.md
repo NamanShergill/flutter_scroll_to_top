@@ -1,3 +1,7 @@
+## [2.0.0] - 21 November 2021.
+- *BREAKING CHANGE* - Replaced `child` parameter with `builder`.
+- Added `scrollDirection`, `primary`, `alwaysVisibleAtOffset`
+
 ## [1.2.0] - 21 November 2021.
 
 - Added elevation to `PromptButtonTheme`

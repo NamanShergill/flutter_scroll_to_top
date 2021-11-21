@@ -12,7 +12,7 @@ class NestedScrollViewExample extends StatelessWidget {
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverSafeArea(
+              sliver: const SliverSafeArea(
                 sliver: SliverAppBar(
                   expandedHeight: 300,
                   collapsedHeight: 100,
@@ -26,15 +26,10 @@ class NestedScrollViewExample extends StatelessWidget {
             builder: (context) {
               NestedScrollView.sliverOverlapAbsorberHandleFor(context);
               return ScrollWrapper(
-                promptReplacementBuilder:
-                    (BuildContext context, Function function) {
-                  return MaterialButton(
-                    onPressed: () {
-                      function();
-                    },
-                    child: Text('Scroll to top'),
-                  );
-                },
+                promptReplacementBuilder: (context, function) => MaterialButton(
+                  onPressed: function,
+                  child: const Text('Scroll to top'),
+                ),
                 builder: (scrollController, scrollDirection) =>
                     CustomScrollView(
                   slivers: [

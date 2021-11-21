@@ -6,15 +6,13 @@ class CustomPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Custom Prompt'),
+        title: const Text('Custom Prompt'),
       ),
       body: ScrollWrapper(
-        promptReplacementBuilder: (BuildContext context, Function function) {
-          return MaterialButton(
-            onPressed: () => function(),
-            child: Text('Scroll to top'),
-          );
-        },
+        promptReplacementBuilder: (context, function) => MaterialButton(
+          onPressed: () => function(),
+          child: const Text('Scroll to top'),
+        ),
         builder: (scrollController, scrollDirection) => ListView.builder(
           controller: scrollController,
           itemBuilder: (context, index) => Padding(
