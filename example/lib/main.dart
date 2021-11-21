@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Scroll to top prompt examples'),
+            title: const Text('Scroll to top prompt examples'),
           ),
           body: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => BasicPrompt(),
                         ));
                       },
-                      child: Text('Basic Prompt'),
+                      child: const Text('Basic Prompt'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => ThemedPrompt(),
                         ));
                       },
-                      child: Text('Themed Prompt'),
+                      child: const Text('Themed Prompt'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -62,9 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => CustomPrompt(),
                         ));
                       },
-                      child: Text('Custom Prompt'),
+                      child: const Text('Custom Prompt'),
                     ),
-                    Flexible(
+                    const Flexible(
                       child: Divider(
                         color: Colors.grey,
                         thickness: 1,
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => NestedScrollViewExample(),
                         ));
                       },
-                      child: Text('NestedScrollView Implementation'),
+                      child: const Text('NestedScrollView Implementation'),
                     ),
                   ],
                 ),

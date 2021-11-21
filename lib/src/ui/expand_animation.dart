@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
-class SizeExpandedSection extends StatefulWidget {
-  final Widget child;
-  final bool expand;
-  final Alignment alignment;
-  final Curve curve;
-  final Duration duration;
-  final PromptAnimation animType;
-  SizeExpandedSection(
+class AnimatePrompt extends StatefulWidget {
+  const AnimatePrompt(
       {required this.expand,
       required this.child,
       required this.animType,
@@ -17,12 +11,18 @@ class SizeExpandedSection extends StatefulWidget {
       required this.alignment,
       Key? key})
       : super(key: key);
+  final Widget child;
+  final bool expand;
+  final Alignment alignment;
+  final Curve curve;
+  final Duration duration;
+  final PromptAnimation animType;
 
   @override
-  _SizeExpandedSectionState createState() => _SizeExpandedSectionState();
+  _AnimatePromptState createState() => _AnimatePromptState();
 }
 
-class _SizeExpandedSectionState extends State<SizeExpandedSection>
+class _AnimatePromptState extends State<AnimatePrompt>
     with SingleTickerProviderStateMixin {
   late AnimationController expandController;
   late Animation<double> animation;
@@ -40,7 +40,9 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
       parent: expandController,
       curve: widget.curve,
     );
-    if (widget.expand) _runExpandCheck();
+    if (widget.expand) {
+      _runExpandCheck();
+    }
   }
 
   void _runExpandCheck() {
@@ -52,7 +54,7 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
   }
 
   @override
-  void didUpdateWidget(SizeExpandedSection oldWidget) {
+  void didUpdateWidget(AnimatePrompt oldWidget) {
     super.didUpdateWidget(oldWidget);
     _runExpandCheck();
   }
@@ -65,17 +67,17 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.animType == PromptAnimation.fade)
+    if (widget.animType == PromptAnimation.fade) {
       return FadeTransition(
         opacity: animation,
         child: widget.child,
       );
-    else if (widget.animType == PromptAnimation.scale)
+    } else if (widget.animType == PromptAnimation.scale) {
       return ScaleTransition(
         scale: animation,
         child: widget.child,
       );
-    else if (widget.animType == PromptAnimation.size)
+    } else if (widget.animType == PromptAnimation.size) {
       return SizeTransition(
         sizeFactor: animation,
         child: Row(
@@ -85,7 +87,8 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
           ],
         ),
       );
-    else
+    } else {
       return Container();
+    }
   }
 }

@@ -1,6 +1,6 @@
 # flutter_scroll_to_top
 
-A wrapper to show a scroll to top prompt to the user on scrollable widgets.
+A wrapper to show a scroll to top prompt to the user on ScrollView widgets.
 
 ## Installing
 
@@ -8,7 +8,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^1.1.0
+  flutter_scroll_to_top: ^2.0.0
 ```
       
 Import the package
@@ -18,30 +18,57 @@ import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
       
 ## ScrollWrapper
 
-Just wrap the scrollable widget you want to show the scroll to top prompt over with a `ScrollWrapper`, and supply the `ScrollController` of the scrollable widget to the wrapper.
+Just wrap the scrollable widget you want to show the scroll to top prompt over with a `ScrollWrapper`.
 
 ```dart
 ScrollWrapper(
-        scrollController: scrollController,
-        child: ListView.builder(
-          controller: scrollController,
-          itemBuilder: (context, index) => Padding(
+    builder: (context, properties) => ListView.builder(
+        itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text('Tile $index'),
-              tileColor: Colors.grey.shade200,
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
             ),
-          ),
         ),
-      ),
+    ),
+)
 ```
 <a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117228-2564dd00-9fbb-11eb-8f83-4feacf2560d1.gif" width="300" ></a>
 
+## ScrollView Properties
+
+If the child ScrollView has different properties for `scrollController`, `scrollDirection`, 
+`primary` or `reverse` parameters than the default values, you need to pass them to the `ScrollWrapper`
+widget as it requires the same parameters. It provides a `ScrollViewProperties` object in the `builder` 
+callback that you can use to access the properties in the ScrollView widget.
+
+```dart
+ScrollWrapper(
+    primary: true,
+    scrollDirection: Axis.horizontal,
+    reverse: true,
+    builder: (context, properties) => ListView.builder(
+        controller: properties.scrollController,
+        scrollDirection: properties.scrollDirection,
+        reverse: properties.reverse,
+        primary: properties.primary,
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+            ),
+        ),
+    ),
+)
+```
 
 ## Customisation
 
 You can pass the following parameters to customise the prompt accordingly
-- `promptScrollOffset` - At what scroll offset to show the prompt on.
+- `enabledAtOffset` - At what scroll offset to enable the prompt on.
+- `alwaysVisibleAtOffset` - If the prompt is to be always visible at the provided offset. Setting this to false only shows the prompt when the user starts scrolling upwards. Default value is false.
+- `scrollOffsetUntilVisible` - Offset should the user scroll in the opposite direction before the prompt becomes visible.
 - `promptAlignment` - Where on the widget to align the prompt.
 - `promptDuration` - Duration it takes for the prompt to come into view/vanish.
 - `promptAnimationCurve` - Animation Curve that the prompt will follow when coming into view.
@@ -56,30 +83,32 @@ You can pass the following parameters to customise the prompt accordingly
 
 ```dart
 ScrollWrapper(
-        scrollController: scrollController,
-        promptAlignment: Alignment.topCenter,
-        promptAnimationCurve: Curves.elasticInOut,
-        promptDuration: Duration(milliseconds: 400),
-        promptScrollOffset: 300,
-        promptTheme: PromptButtonTheme(
-            icon: Icon(Icons.arrow_circle_up, color: Colors.amber),
-            color: Colors.deepPurpleAccent,
-            iconPadding: EdgeInsets.all(16),
-            padding: EdgeInsets.all(32)),
-        child: ListView.builder(
-          controller: scrollController,
-          itemBuilder: (context, index) => Padding(
+    promptAlignment: Alignment.topCenter,
+    promptAnimationCurve: Curves.elasticInOut,
+    promptDuration: const Duration(milliseconds: 400),
+    enabledAtOffset: 300,
+    scrollOffsetUntilVisible: 500,
+    promptTheme: const PromptButtonTheme(
+    icon: Icon(Icons.arrow_circle_up, color: Colors.amber),
+    color: Colors.deepPurpleAccent,
+    iconPadding: EdgeInsets.all(16),
+    padding: EdgeInsets.all(32)),
+    builder: (context, properties) => ListView.builder(
+        controller: properties.scrollController,
+        scrollDirection: properties.scrollDirection,
+        reverse: properties.reverse,
+        primary: properties.primary,
+            itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text('Tile $index'),
-              tileColor: Colors.grey.shade200,
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
             ),
-          ),
         ),
-      ),
+    ),
+)
 ```
 <a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/themed_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117233-2ac22780-9fbb-11eb-876e-171103e9ef91.gif" width="300" ></a>
-
 
 ## Custom Prompt Widget
 
@@ -87,32 +116,32 @@ You can replace the default prompt widget with a widget of your choosing by pass
 
 ```dart
 ScrollWrapper(
-        scrollController: scrollController,
-        promptReplacementBuilder: (BuildContext context, Function scrollToTop) {
-          return MaterialButton(
-            onPressed: () {
-              scrollToTop();
-            },
-            child: Text('Scroll to top'),
-          );
-        },
-        child: ListView.builder(
-          controller: scrollController,
-          itemBuilder: (context, index) => Padding(
+    promptReplacementBuilder: (context, function) => MaterialButton(
+        onPressed: () => function(),
+        child: const Text('Scroll to top'),
+    ),
+    builder: (context, properties) => ListView.builder(
+        controller: properties.scrollController,
+        scrollDirection: properties.scrollDirection,
+        reverse: properties.reverse,
+        primary: properties.primary,
+        itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text('Tile $index'),
-              tileColor: Colors.grey.shade200,
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
             ),
-          ),
         ),
-      )
+    ),
+)
 ```
 <a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117236-2e55ae80-9fbb-11eb-95c8-c8467797a877.gif" width="300" ></a>
 
 ## NestedScrollView Implementation
 
-The implementation is similar, just wrap your scrollable body with the `ScrollWrapper` and pass off the controller of the parent `NestsedScrollView` to the wrapper.
+The implementation is similar, just wrap your scrollable body with the `ScrollWrapper`.
+However, ***DO NOT*** pass a `scrollController` to the `ScrollWrapper` in this case, similar to how
+you are not supposed to pass it to a ScrollView under a NestedScrollView.
 
 [Check the example for code.](https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart)
 
