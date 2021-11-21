@@ -140,7 +140,7 @@ ScrollWrapper(
 ## NestedScrollView Implementation
 
 The implementation is similar, just wrap your scrollable body with the `ScrollWrapper`.
-However, ***do not*** pass a `scrollController` to the `ScrollWrapper` in this case, similar to how
+However, ***DO NOT*** pass a `scrollController` to the `ScrollWrapper` in this case, similar to how
 you are not supposed to pass it to a ScrollView under a NestedScrollView.
 
 [Check the example for code.](https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart)
