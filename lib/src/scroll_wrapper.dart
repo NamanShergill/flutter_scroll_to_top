@@ -117,7 +117,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   @override
   void initState() {
     super.initState();
-    _promptTheme = widget.promptTheme ?? PromptButtonTheme();
+    _promptTheme = widget.promptTheme ?? const PromptButtonTheme();
   }
 
   @override
@@ -131,7 +131,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   void didUpdateWidget(covariant ScrollWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.promptTheme != widget.promptTheme) {
-      _promptTheme = widget.promptTheme ?? PromptButtonTheme();
+      _promptTheme = widget.promptTheme ?? const PromptButtonTheme();
     }
   }
 
@@ -235,7 +235,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
 class PromptButtonTheme {
   /// Custom prompt button theme to be given to a [ScrollWrapper].
-  PromptButtonTheme({
+  const PromptButtonTheme({
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     this.icon,
     this.iconPadding = const EdgeInsets.all(8.0),
