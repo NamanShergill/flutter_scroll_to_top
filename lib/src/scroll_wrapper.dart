@@ -6,7 +6,7 @@ import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 typedef ReplacementBuilder = Widget Function(
     BuildContext context, VoidCallback function);
 
-typedef ScrollBuilder = Widget Function(
+typedef ScrollBuilder = Widget Function(BuildContext context,
     ScrollController scrollController, Axis scrollDirection);
 
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
@@ -186,7 +186,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.builder(_scrollController, widget.scrollDirection),
+        widget.builder(context, _scrollController, widget.scrollDirection),
         Align(
           alignment: widget.promptAlignment,
           child: SizeExpandedSection(
@@ -242,6 +242,7 @@ class PromptButtonTheme {
     this.elevation,
     this.color,
   });
+
   /// Padding around the prompt button.
   final EdgeInsets padding;
 
@@ -257,7 +258,6 @@ class PromptButtonTheme {
   /// Color of the prompt button. Defaults to the accent color of the current
   /// context's [Theme].
   final Color? color;
-
 }
 
 enum PromptAnimation { fade, scale, size }
