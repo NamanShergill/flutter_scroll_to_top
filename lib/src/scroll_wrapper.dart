@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
@@ -11,22 +12,23 @@ typedef ScrollBuilder = Widget Function(
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
 class ScrollWrapper extends StatefulWidget {
-  ScrollWrapper({
-    Key? key,
-    required this.builder,
-    this.scrollController,
-    this.scrollDirection = Axis.vertical,
-    bool? primary,
-    this.promptScrollOffset = 200,
-    this.scrollToTopCurve = Curves.fastOutSlowIn,
-    this.scrollToTopDuration = const Duration(milliseconds: 500),
-    this.promptDuration = const Duration(milliseconds: 500),
-    this.promptAnimationCurve = Curves.fastOutSlowIn,
-    Alignment? promptAlignment,
-    this.promptTheme,
-    this.promptAnimationType = PromptAnimation.size,
-    this.promptReplacementBuilder,
-  })  : assert(
+  ScrollWrapper(
+      {Key? key,
+      required this.builder,
+      this.scrollController,
+      this.scrollDirection = Axis.vertical,
+      bool? primary,
+      this.promptScrollOffset = 200,
+      this.alwaysVisibleAtOffset = false,
+      this.scrollToTopCurve = Curves.fastOutSlowIn,
+      this.scrollToTopDuration = const Duration(milliseconds: 500),
+      this.promptDuration = const Duration(milliseconds: 500),
+      this.promptAnimationCurve = Curves.fastOutSlowIn,
+      Alignment? promptAlignment,
+      this.promptTheme,
+      this.promptAnimationType = PromptAnimation.size,
+      this.promptReplacementBuilder})
+      : assert(
           !(scrollController != null && primary == true),
           'Primary ScrollViews obtain their ScrollController via inheritance from a PrimaryScrollController widget. '
           'You cannot both set primary to true and pass an explicit controller.',
@@ -60,6 +62,11 @@ class ScrollWrapper extends StatefulWidget {
 
   /// At what scroll offset to show the prompt on.
   final double promptScrollOffset;
+
+  /// If the prompt is to be always visible at the provided offset. Setting this
+  /// to false only shows the prompt when the user starts scrolling upwards.
+  /// Default value is false.
+  final bool alwaysVisibleAtOffset;
 
   /// **Replace the prompt button with your own custom widget. Returns the**
   /// **[BuildContext] and the [Function] to call to scroll to top.**
@@ -139,22 +146,34 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _setupListener() {
     _scrollController.addListener(() {
-      if (_scrollController.offset > widget.promptScrollOffset &&
-          !scrollTopAtOffset)
+      final direction = _scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.forward ||
+          widget.alwaysVisibleAtOffset) {
+        _checkState();
+      } else {
         setState(() {
-          scrollTopAtOffset = true;
+          _scrollTopAtOffset = false;
         });
-      else if (_scrollController.offset <= widget.promptScrollOffset &&
-          scrollTopAtOffset)
-        setState(() {
-          scrollTopAtOffset = false;
-        });
+      }
     });
   }
 
-  bool scrollTopAtOffset = false;
+  void _checkState() {
+    if (_scrollController.offset > widget.promptScrollOffset &&
+        !_scrollTopAtOffset)
+      setState(() {
+        _scrollTopAtOffset = true;
+      });
+    else if (_scrollController.offset <= widget.promptScrollOffset &&
+        _scrollTopAtOffset)
+      setState(() {
+        _scrollTopAtOffset = false;
+      });
+  }
 
-  void scrollToTop() {
+  bool _scrollTopAtOffset = false;
+
+  void _scrollToTop() {
     _scrollController.animateTo(
       _scrollController.position.minScrollExtent,
       duration: widget.scrollToTopDuration,
@@ -170,13 +189,13 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
         Align(
           alignment: widget.promptAlignment,
           child: SizeExpandedSection(
-            expand: scrollTopAtOffset,
+            expand: _scrollTopAtOffset,
             animType: widget.promptAnimationType,
             duration: widget.promptDuration,
             curve: widget.promptAnimationCurve,
             alignment: widget.promptAlignment,
             child: widget.promptReplacementBuilder != null
-                ? widget.promptReplacementBuilder!(context, scrollToTop)
+                ? widget.promptReplacementBuilder!(context, _scrollToTop)
                 : Padding(
                     padding: _promptTheme.padding,
                     child: Material(
@@ -189,7 +208,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                           Theme.of(context).appBarTheme.backgroundColor ??
                           Theme.of(context).primaryColor,
                       child: InkWell(
-                        onTap: scrollToTop,
+                        onTap: _scrollToTop,
                         child: Padding(
                           padding: _promptTheme.iconPadding,
                           child: _promptTheme.icon ??

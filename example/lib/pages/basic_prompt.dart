@@ -14,9 +14,12 @@ class BasicPrompt extends StatelessWidget {
           scrollDirection: scrollDirection,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text('Tile $index'),
-              tileColor: Colors.grey.shade200,
+            child: SizedBox(
+              width: 50,
+              child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+              ),
             ),
           ),
         ),
