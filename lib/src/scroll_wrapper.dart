@@ -6,8 +6,8 @@ import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 typedef ReplacementBuilder = Widget Function(
     BuildContext context, VoidCallback function);
 
-typedef ScrollBuilder = Widget Function(BuildContext context,
-    ScrollController scrollController, Axis scrollDirection);
+typedef ScrollBuilder = Widget Function(
+    BuildContext context, ScrollViewProperties properties);
 
 /// Wrap the widget to show a scroll to top prompt over when a certain scroll
 /// offset is reached.
@@ -18,13 +18,14 @@ class ScrollWrapper extends StatefulWidget {
       this.scrollController,
       this.scrollDirection = Axis.vertical,
       bool? primary,
+      this.reverse = false,
       this.promptScrollOffset = 200,
       this.alwaysVisibleAtOffset = false,
       this.scrollToTopCurve = Curves.fastOutSlowIn,
       this.scrollToTopDuration = const Duration(milliseconds: 500),
       this.promptDuration = const Duration(milliseconds: 500),
       this.promptAnimationCurve = Curves.fastOutSlowIn,
-      Alignment? promptAlignment,
+      this.promptAlignment,
       this.promptTheme,
       this.promptAnimationType = PromptAnimation.size,
       this.promptReplacementBuilder})
@@ -36,10 +37,6 @@ class ScrollWrapper extends StatefulWidget {
         primary = primary ??
             scrollController == null &&
                 identical(scrollDirection, Axis.vertical),
-        promptAlignment = promptAlignment ??
-            (identical(scrollDirection, Axis.vertical)
-                ? Alignment.topRight
-                : Alignment.topLeft),
         super(key: key);
 
   /// [ScrollController] of the scrollable widget to scroll to the top of when
@@ -59,6 +56,20 @@ class ScrollWrapper extends StatefulWidget {
   /// Defaults to true when [scrollDirection] is [Axis.vertical] and
   /// [controller] is null.
   final bool primary;
+
+  /// Whether the scroll view scrolls in the reading direction.
+  ///
+  /// For example, if the reading direction is left-to-right and
+  /// [scrollDirection] is [Axis.horizontal], then the scroll view scrolls from
+  /// left to right when [reverse] is false and from right to left when
+  /// [reverse] is true.
+  ///
+  /// Similarly, if [scrollDirection] is [Axis.vertical], then the scroll view
+  /// scrolls from top to bottom when [reverse] is false and from bottom to top
+  /// when [reverse] is true.
+  ///
+  /// Defaults to false.
+  final bool reverse;
 
   /// At what scroll offset to show the prompt on.
   final double promptScrollOffset;
@@ -88,7 +99,7 @@ class ScrollWrapper extends StatefulWidget {
   final PromptButtonTheme? promptTheme;
 
   /// Where on the widget to align the prompt.
-  final Alignment promptAlignment;
+  final Alignment? promptAlignment;
 
   /// Duration it takes for the prompt to come into view/vanish.
   final Duration promptDuration;
@@ -113,11 +124,45 @@ class ScrollWrapper extends StatefulWidget {
 class _ScrollWrapperState extends State<ScrollWrapper> {
   late PromptButtonTheme _promptTheme;
   late ScrollController _scrollController;
+  late Alignment _promptAlignment;
 
   @override
   void initState() {
     super.initState();
     _promptTheme = widget.promptTheme ?? const PromptButtonTheme();
+    _promptAlignment = widget.promptAlignment ?? _setPromptAlignment();
+  }
+
+  Alignment _setPromptAlignment() {
+    if (identical(widget.scrollDirection, Axis.vertical)) {
+      if (widget.reverse) {
+        return Alignment.bottomRight;
+      } else {
+        return Alignment.topRight;
+      }
+    } else {
+      if (widget.reverse) {
+        return Alignment.topRight;
+      } else {
+        return Alignment.topLeft;
+      }
+    }
+  }
+
+  IconData _getDefaultIcon() {
+    if (identical(widget.scrollDirection, Axis.vertical)) {
+      if (widget.reverse) {
+        return Icons.keyboard_arrow_down_rounded;
+      } else {
+        return Icons.keyboard_arrow_up_rounded;
+      }
+    } else {
+      if (widget.reverse) {
+        return Icons.keyboard_arrow_right_rounded;
+      } else {
+        return Icons.keyboard_arrow_left_rounded;
+      }
+    }
   }
 
   @override
@@ -132,6 +177,11 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.promptTheme != widget.promptTheme) {
       _promptTheme = widget.promptTheme ?? const PromptButtonTheme();
+    }
+    if (oldWidget.promptAlignment != widget.promptAlignment ||
+        oldWidget.primary != widget.primary ||
+        oldWidget.scrollDirection != widget.scrollDirection) {
+      _promptAlignment = widget.promptAlignment ?? _setPromptAlignment();
     }
   }
 
@@ -186,15 +236,22 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.builder(context, _scrollController, widget.scrollDirection),
+        widget.builder(
+          context,
+          ScrollViewProperties(
+              reverse: widget.reverse,
+              primary: widget.primary,
+              scrollDirection: widget.scrollDirection,
+              scrollController: _scrollController),
+        ),
         Align(
-          alignment: widget.promptAlignment,
-          child: SizeExpandedSection(
+          alignment: _promptAlignment,
+          child: AnimatePrompt(
             expand: _scrollTopAtOffset,
             animType: widget.promptAnimationType,
             duration: widget.promptDuration,
             curve: widget.promptAnimationCurve,
-            alignment: widget.promptAlignment,
+            alignment: _promptAlignment,
             child: widget.promptReplacementBuilder != null
                 ? widget.promptReplacementBuilder!(context, _scrollToTop)
                 : Padding(
@@ -214,9 +271,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                           padding: _promptTheme.iconPadding,
                           child: _promptTheme.icon ??
                               Icon(
-                                widget.scrollDirection == Axis.vertical
-                                    ? Icons.keyboard_arrow_up_rounded
-                                    : Icons.keyboard_arrow_left_rounded,
+                                _getDefaultIcon(),
                                 color: Theme.of(context)
                                         .appBarTheme
                                         .foregroundColor ??
@@ -258,6 +313,21 @@ class PromptButtonTheme {
   /// Color of the prompt button. Defaults to the accent color of the current
   /// context's [Theme].
   final Color? color;
+}
+
+class ScrollViewProperties {
+  const ScrollViewProperties(
+      {required this.reverse,
+      required this.primary,
+      required this.scrollDirection,
+      required ScrollController scrollController})
+      : _scrollController = scrollController;
+  final ScrollController? _scrollController;
+  final bool reverse;
+  final bool primary;
+  final Axis scrollDirection;
+
+  ScrollController? get scrollController => primary ? null : _scrollController;
 }
 
 enum PromptAnimation { fade, scale, size }

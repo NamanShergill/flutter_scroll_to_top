@@ -1,8 +1,8 @@
 ## [2.0.0] - 21 November 2021.
 - *BREAKING CHANGE* - Replaced `child` parameter with `builder`.
-- Added `scrollDirection`, `primary`, `alwaysVisibleAtOffset` parameters.
+- Added `scrollDirection`, `primary`, `reverse` and `alwaysVisibleAtOffset` parameters.
 - Made `scrollController` parameter nullable and added `PrimaryScrollController.of(context)` fallback.
-- Better behaviour for horizontal scrollviews.
+- Better behaviour for horizontal ScrollViews.
 - Changed default behaviour to show prompt on upwards scroll. Can be disabled by setting `alwaysVisibleAtOffset` to false.
 - Made `ScrollWrapper` and `PromptButtonTheme` constructors const.
 

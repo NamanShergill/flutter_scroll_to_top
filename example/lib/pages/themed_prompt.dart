@@ -13,15 +13,16 @@ class ThemedPrompt extends StatelessWidget {
         promptAnimationCurve: Curves.elasticInOut,
         promptDuration: const Duration(milliseconds: 400),
         promptScrollOffset: 300,
-        promptTheme: PromptButtonTheme(
-            icon: const Icon(Icons.arrow_circle_up, color: Colors.amber),
+        promptTheme: const PromptButtonTheme(
+            icon: Icon(Icons.arrow_circle_up, color: Colors.amber),
             color: Colors.deepPurpleAccent,
-            iconPadding: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(32)),
-        builder: (context, scrollController, scrollDirection) =>
-            ListView.builder(
-          controller: scrollController,
-          scrollDirection: scrollDirection,
+            iconPadding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(32)),
+        builder: (context, properties) => ListView.builder(
+          controller: properties.scrollController,
+          scrollDirection: properties.scrollDirection,
+          reverse: properties.reverse,
+          primary: properties.primary,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListTile(

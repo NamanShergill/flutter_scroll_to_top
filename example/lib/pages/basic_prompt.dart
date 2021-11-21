@@ -9,10 +9,11 @@ class BasicPrompt extends StatelessWidget {
         title: const Text('Basic Prompt'),
       ),
       body: ScrollWrapper(
-        builder: (context, scrollController, scrollDirection) =>
-            ListView.builder(
-          controller: scrollController,
-          scrollDirection: scrollDirection,
+        builder: (context, properties) => ListView.builder(
+          controller: properties.scrollController,
+          scrollDirection: properties.scrollDirection,
+          reverse: properties.reverse,
+          primary: properties.primary,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(

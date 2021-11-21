@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
-class SizeExpandedSection extends StatefulWidget {
-  const SizeExpandedSection(
+class AnimatePrompt extends StatefulWidget {
+  const AnimatePrompt(
       {required this.expand,
       required this.child,
       required this.animType,
@@ -19,10 +19,10 @@ class SizeExpandedSection extends StatefulWidget {
   final PromptAnimation animType;
 
   @override
-  _SizeExpandedSectionState createState() => _SizeExpandedSectionState();
+  _AnimatePromptState createState() => _AnimatePromptState();
 }
 
-class _SizeExpandedSectionState extends State<SizeExpandedSection>
+class _AnimatePromptState extends State<AnimatePrompt>
     with SingleTickerProviderStateMixin {
   late AnimationController expandController;
   late Animation<double> animation;
@@ -54,7 +54,7 @@ class _SizeExpandedSectionState extends State<SizeExpandedSection>
   }
 
   @override
-  void didUpdateWidget(SizeExpandedSection oldWidget) {
+  void didUpdateWidget(AnimatePrompt oldWidget) {
     super.didUpdateWidget(oldWidget);
     _runExpandCheck();
   }
