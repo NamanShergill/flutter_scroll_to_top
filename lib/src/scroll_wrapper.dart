@@ -214,10 +214,12 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _setupListener() {
     _scrollController.addListener(() {
-      final direction = _scrollController.positions.last.userScrollDirection;
       if (widget.alwaysVisibleAtOffset) {
         _checkState();
-      } else if (direction == ScrollDirection.forward) {
+        return;
+      }
+      final direction = _scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.forward) {
         _currentScrollUpOffset ??= _scrollController.offset;
         if (_currentScrollUpOffset! - _scrollController.offset >
             widget.scrollOffsetUntilVisible) {
