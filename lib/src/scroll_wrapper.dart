@@ -214,7 +214,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _setupListener() {
     _scrollController.addListener(() {
-      final direction = _scrollController.position.userScrollDirection;
+      final direction = _scrollController.positions.last.userScrollDirection;
       if (widget.alwaysVisibleAtOffset) {
         _checkState();
       } else if (direction == ScrollDirection.forward) {
@@ -260,13 +260,18 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   bool _scrollTopAtOffset = false;
 
-  void _scrollToTop() {
+  void _scrollToTop() async {
     widget.onPromptTap?.call();
-    _scrollController.animateTo(
+    await _scrollController.animateTo(
       _scrollController.position.minScrollExtent,
       duration: widget.scrollToTopDuration,
       curve: widget.scrollToTopCurve,
     );
+    if (mounted) {
+      setState(() {
+        _scrollTopAtOffset = false;
+      });
+    }
   }
 
   @override
