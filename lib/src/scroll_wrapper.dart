@@ -246,6 +246,11 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _setupListener() {
     _scrollController.addListener(() {
+      if (widget._nestedScrollViewController != null) {
+        if (_scrollController.offset == 0) {
+          widget._nestedScrollViewController!.jumpTo(0);
+        }
+      }
       if (widget.alwaysVisibleAtOffset) {
         _checkState();
         return;
