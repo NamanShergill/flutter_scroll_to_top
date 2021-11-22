@@ -1,3 +1,6 @@
+## [2.1.1] - 22 November 2021.
+- Fixed prompt not hiding on tap.
+
 ## [2.1.0] - 22 November 2021.
 - Added `scrollOffsetUntilHide` parameter.
 - Slightly changed default values of parameters.
