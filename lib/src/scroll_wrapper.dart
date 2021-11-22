@@ -212,17 +212,18 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
       if (widget.alwaysVisibleAtOffset) {
         _checkState();
       } else if (direction == ScrollDirection.forward) {
-        _currentScrollStartOffset =
-            _currentScrollStartOffset ?? _scrollController.offset;
+        _currentScrollStartOffset ??= _scrollController.offset;
         if (_currentScrollStartOffset! - _scrollController.offset >
             widget.scrollOffsetUntilVisible) {
           _checkState();
         }
       } else {
-        setState(() {
-          _scrollTopAtOffset = false;
-        });
-        _currentScrollStartOffset = null;
+        if (_scrollController.offset - _currentScrollStartOffset! > 10) {
+          setState(() {
+            _scrollTopAtOffset = false;
+          });
+          _currentScrollStartOffset = null;
+        }
       }
     });
   }
