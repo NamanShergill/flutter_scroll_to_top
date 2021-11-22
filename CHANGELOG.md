@@ -1,3 +1,7 @@
+## [2.1.0] - 22 November 2021.
+- Added `scrollOffsetUntilHide` parameter.
+- Slightly changed default values of parameters.
+
 ## [2.0.1] - 22 November 2021.
 - ***BREAKING CHANGE*** - Replaced `child` parameter with `builder`.
 - ***BREAKING CHANGE*** - Renamed `promptScrollOffset` to `enabledAtOffset`.

@@ -21,7 +21,8 @@ class ScrollWrapper extends StatefulWidget {
     this.reverse = false,
     this.onPromptTap,
     this.scrollOffsetUntilVisible = 200,
-    this.enabledAtOffset = 200,
+    this.scrollOffsetUntilHide = 200,
+    this.enabledAtOffset = 500,
     this.alwaysVisibleAtOffset = false,
     this.scrollToTopCurve = Curves.fastOutSlowIn,
     this.scrollToTopDuration = const Duration(milliseconds: 500),
@@ -88,6 +89,10 @@ class ScrollWrapper extends StatefulWidget {
   /// the opposite direction (ex, upwards scroll on a non-reversed vertical
   /// ScrollView) before the prompt becomes visible.
   final double scrollOffsetUntilVisible;
+
+  /// If [alwaysVisibleAtOffset] is false, at what offset should the user scroll
+  /// before the prompt hides itself, if visible.
+  final double scrollOffsetUntilHide;
 
   /// **Replace the prompt button with your own custom widget. Returns the**
   /// **[BuildContext] and the [Function] to call to scroll to top.**
@@ -204,7 +209,8 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
-  double? _currentScrollStartOffset;
+  double? _currentScrollUpOffset;
+  double? _currentScrollDownOffset;
 
   void _setupListener() {
     _scrollController.addListener(() {
@@ -212,17 +218,21 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
       if (widget.alwaysVisibleAtOffset) {
         _checkState();
       } else if (direction == ScrollDirection.forward) {
-        _currentScrollStartOffset ??= _scrollController.offset;
-        if (_currentScrollStartOffset! - _scrollController.offset >
+        _currentScrollUpOffset ??= _scrollController.offset;
+        if (_currentScrollUpOffset! - _scrollController.offset >
             widget.scrollOffsetUntilVisible) {
           _checkState();
+          _currentScrollDownOffset = null;
         }
       } else {
-        if (_scrollController.offset - _currentScrollStartOffset! > 10) {
+        _currentScrollDownOffset ??= _scrollController.offset;
+        if (_scrollController.offset - _currentScrollDownOffset! >
+            widget.scrollOffsetUntilHide) {
           setState(() {
             _scrollTopAtOffset = false;
           });
-          _currentScrollStartOffset = null;
+          _currentScrollUpOffset = null;
+          _currentScrollDownOffset = null;
         }
       }
     });
@@ -343,7 +353,7 @@ class ScrollViewProperties {
       required this.scrollDirection,
       required ScrollController scrollController})
       : _scrollController = scrollController;
-  final ScrollController? _scrollController;
+  final ScrollController _scrollController;
   final bool reverse;
   final bool primary;
   final Axis scrollDirection;

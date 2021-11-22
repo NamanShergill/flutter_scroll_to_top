@@ -8,7 +8,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^2.0.0
+  flutter_scroll_to_top: ^2.1.0
 ```
       
 Import the package
@@ -69,6 +69,7 @@ You can pass the following parameters to customise the prompt accordingly
 - `enabledAtOffset` - At what scroll offset to enable the prompt on.
 - `alwaysVisibleAtOffset` - If the prompt is to be always visible at the provided offset. Setting this to false only shows the prompt when the user starts scrolling upwards. Default value is false.
 - `scrollOffsetUntilVisible` - Offset should the user scroll in the opposite direction before the prompt becomes visible.
+- `scrollOffsetUntilHide` - Offset should the user scroll before the prompt hides itself, if visible.
 - `promptAlignment` - Where on the widget to align the prompt.
 - `promptDuration` - Duration it takes for the prompt to come into view/vanish.
 - `promptAnimationCurve` - Animation Curve that the prompt will follow when coming into view.
@@ -80,6 +81,7 @@ You can pass the following parameters to customise the prompt accordingly
     - `iconPadding` - Padding around the icon inside the button.
     - `icon` - The icon inside the button.
     - `color` - Color of the prompt button.
+    - `elevation` - Elevation of the button.
 
 ```dart
 ScrollWrapper(
