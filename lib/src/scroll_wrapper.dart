@@ -228,9 +228,11 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
         _currentScrollDownOffset ??= _scrollController.offset;
         if (_scrollController.offset - _currentScrollDownOffset! >
             widget.scrollOffsetUntilHide) {
-          setState(() {
-            _scrollTopAtOffset = false;
-          });
+          if (mounted) {
+            setState(() {
+              _scrollTopAtOffset = false;
+            });
+          }
           _currentScrollUpOffset = null;
           _currentScrollDownOffset = null;
         }
@@ -241,14 +243,18 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   void _checkState() {
     if (_scrollController.offset > widget.enabledAtOffset &&
         !_scrollTopAtOffset) {
-      setState(() {
-        _scrollTopAtOffset = true;
-      });
+      if (mounted) {
+        setState(() {
+          _scrollTopAtOffset = true;
+        });
+      }
     } else if (_scrollController.offset <= widget.enabledAtOffset &&
         _scrollTopAtOffset) {
-      setState(() {
-        _scrollTopAtOffset = false;
-      });
+      if (mounted) {
+        setState(() {
+          _scrollTopAtOffset = false;
+        });
+      }
     }
   }
 
