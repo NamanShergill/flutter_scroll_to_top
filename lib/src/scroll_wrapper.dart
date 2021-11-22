@@ -40,6 +40,31 @@ class ScrollWrapper extends StatefulWidget {
         primary = primary ??
             scrollController == null &&
                 identical(scrollDirection, Axis.vertical),
+        _nestedScrollViewController = null,
+        super(key: key);
+
+  const ScrollWrapper.nsvMultipleScrollViews({
+    Key? key,
+    required this.builder,
+    required ScrollController nestedScrollViewController,
+    this.scrollController,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
+    this.onPromptTap,
+    this.scrollOffsetUntilVisible = 200,
+    this.scrollOffsetUntilHide = 200,
+    this.enabledAtOffset = 500,
+    this.alwaysVisibleAtOffset = false,
+    this.scrollToTopCurve = Curves.fastOutSlowIn,
+    this.scrollToTopDuration = const Duration(milliseconds: 500),
+    this.promptDuration = const Duration(milliseconds: 500),
+    this.promptAnimationCurve = Curves.fastOutSlowIn,
+    this.promptAlignment,
+    this.promptTheme,
+    this.promptAnimationType = PromptAnimation.size,
+    this.promptReplacementBuilder,
+  })  : primary = false,
+        _nestedScrollViewController = nestedScrollViewController,
         super(key: key);
 
   /// [ScrollController] of the scrollable widget to scroll to the top of when
@@ -132,6 +157,8 @@ class ScrollWrapper extends StatefulWidget {
   /// Default is [PromptAnimation.size].
   final PromptAnimation promptAnimationType;
 
+  final ScrollController? _nestedScrollViewController;
+
   @override
   _ScrollWrapperState createState() => _ScrollWrapperState();
 }
@@ -200,6 +227,11 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
+  void _absorbScrollBehaviour(double scrolled) {
+    widget._nestedScrollViewController!
+        .jumpTo(widget._nestedScrollViewController!.offset + scrolled);
+  }
+
   void _setupScrollController() {
     if (widget.primary) {
       _scrollController =
@@ -264,11 +296,19 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   void _scrollToTop() async {
     widget.onPromptTap?.call();
+    if (widget._nestedScrollViewController != null) {
+      widget._nestedScrollViewController!.animateTo(
+        _scrollController.position.minScrollExtent,
+        duration: widget.scrollToTopDuration,
+        curve: widget.scrollToTopCurve,
+      );
+    }
     await _scrollController.animateTo(
       _scrollController.position.minScrollExtent,
       duration: widget.scrollToTopDuration,
       curve: widget.scrollToTopCurve,
     );
+
     if (mounted) {
       setState(() {
         _scrollTopAtOffset = false;
@@ -278,16 +318,39 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child() {
+      final child = widget.builder(
+        context,
+        ScrollViewProperties(
+            reverse: widget.reverse,
+            primary: widget.primary,
+            scrollDirection: widget.scrollDirection,
+            scrollController: _scrollController),
+      );
+      if (widget._nestedScrollViewController != null) {
+        return NotificationListener(
+            onNotification: (notification) {
+              if (notification is OverscrollNotification) {
+                _absorbScrollBehaviour(notification.overscroll);
+              }
+              if (notification is ScrollUpdateNotification &&
+                  ((notification.scrollDelta != null &&
+                          notification.scrollDelta! > 0) ||
+                      _scrollController.offset <
+                          MediaQuery.of(context).size.height * 0.3)) {
+                _absorbScrollBehaviour(notification.scrollDelta!);
+              }
+              return true;
+            },
+            child: child);
+      } else {
+        return child;
+      }
+    }
+
     return Stack(
       children: [
-        widget.builder(
-          context,
-          ScrollViewProperties(
-              reverse: widget.reverse,
-              primary: widget.primary,
-              scrollDirection: widget.scrollDirection,
-              scrollController: _scrollController),
-        ),
+        child(),
         Align(
           alignment: _promptAlignment,
           child: AnimatePrompt(

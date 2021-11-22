@@ -1,5 +1,6 @@
 import 'package:example/pages/basic_prompt.dart';
 import 'package:example/pages/custom_prompt.dart';
+import 'package:example/pages/nested_multiple_scroll_view_example.dart';
 import 'package:example/pages/nested_scroll_view_example.dart';
 import 'package:example/pages/themed_prompt.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         ));
                       },
                       child: const Text('NestedScrollView Implementation'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              NestedMultipleScrollViewExample(),
+                        ));
+                      },
+                      child: const Text(
+                          'NestedScrollView Multiple SV Implementation'),
                     ),
                   ],
                 ),
