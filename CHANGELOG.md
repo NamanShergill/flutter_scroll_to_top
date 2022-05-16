@@ -1,3 +1,9 @@
+## [2.2.1-beta] - 16 May 2022.
+- Fixed prompt not disappearing on reverse scroll.
+
+## [2.2.0-beta] - 16 May 2022.
+- Bundled modified scrollviews to work around primary scroll controller limitations.
+
 ## [2.1.1] - 22 November 2021.
 - Fixed prompt not hiding on tap.
 

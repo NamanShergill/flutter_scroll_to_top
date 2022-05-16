@@ -208,38 +208,63 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
-  double? _currentScrollUpOffset;
-  double? _currentScrollDownOffset;
+  double? _currentScrollForwardOffset;
+  double? _currentScrollReverseOffset;
 
+  /// Get position of a child [ScrollViewCustom] if it exists.
   ScrollPosition get _position =>
-      _scrollStateKey.currentState?.position ?? _scrollController.position;
+      _scrollStateKey.currentState?.position ??
+      _scrollController.positions.first;
+
+  void _listen() {
+    // Check state if:
+    // - Either the *alwaysVisibleAtOffset* parameter is set to true.
+    // - Or the prompt is currently visible and the position is less than the
+    //   offset limit for it to be visible.
+    if (widget.alwaysVisibleAtOffset ||
+        (_scrollTopAtOffset &&
+            _position.pixels < widget.scrollOffsetUntilVisible)) {
+      _checkState();
+      return;
+    }
+    final direction = _position.userScrollDirection;
+    if (direction == ScrollDirection.forward) {
+      // Save the point where user starts scrolling forward.
+      _currentScrollForwardOffset ??= _position.pixels;
+
+      // Check state if user scrolled the *scrollOffsetUntilVisible*
+      // value since they started.
+      if (_currentScrollForwardOffset! - _position.pixels >
+          widget.scrollOffsetUntilVisible) {
+        _checkState();
+        // Set *_currentScrollReverseOffset* to null as user scrolled forward.
+        _currentScrollReverseOffset = null;
+      }
+    } else {
+      // Save the point where user starts scrolling in reverse.
+      _currentScrollReverseOffset ??= _position.pixels;
+      // Check state if user scrolled the *scrollOffsetUntilHide*
+      // value since they started.
+      if (_position.pixels - _currentScrollReverseOffset! >
+          widget.scrollOffsetUntilHide) {
+        if (mounted) {
+          setState(() {
+            _scrollTopAtOffset = false;
+          });
+        }
+        // Set both to null as user scrolled in reverse.
+        _currentScrollForwardOffset = null;
+        _currentScrollReverseOffset = null;
+      }
+    }
+  }
 
   void _setupListener() {
     _scrollController.addListener(() {
-      if (widget.alwaysVisibleAtOffset || _scrollTopAtOffset) {
-        _checkState();
-        return;
-      }
-      final direction = _position.userScrollDirection;
-      if (direction == ScrollDirection.forward) {
-        _currentScrollUpOffset ??= _position.pixels;
-        if (_currentScrollUpOffset! - _position.pixels >
-            widget.scrollOffsetUntilVisible) {
-          _checkState();
-          _currentScrollDownOffset = null;
-        }
-      } else {
-        _currentScrollDownOffset ??= _position.pixels;
-        if (_position.pixels - _currentScrollDownOffset! >
-            widget.scrollOffsetUntilHide) {
-          if (mounted) {
-            setState(() {
-              _scrollTopAtOffset = false;
-            });
-          }
-          _currentScrollUpOffset = null;
-          _currentScrollDownOffset = null;
-        }
+      try {
+        _listen();
+      } catch (e) {
+        debugPrint(e.toString());
       }
     });
   }

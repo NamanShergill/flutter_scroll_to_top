@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class NestedScrollViewExample extends StatelessWidget {
-  final ScrollController scrollController = ScrollController();
+  const NestedScrollViewExample({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
-          controller: scrollController,
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
