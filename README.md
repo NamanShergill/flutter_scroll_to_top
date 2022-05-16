@@ -154,8 +154,8 @@ import 'package:flutter_scroll_to_top/modified_scroll_view.dart' as scrollview;
 
 Then replace your scrollview in the following way:
 
+**Before**
 ```dart
-// Before
 ScrollWrapper(
     builder: (context, properties) => ListView.builder(
         itemBuilder: (context, index) => Padding(
@@ -167,8 +167,10 @@ ScrollWrapper(
         ),
     ),
 )
+```
 
-// After
+**After**
+```dart
 ScrollWrapper(
     builder: (context, properties) => scrollview.ListView.builder(
         properties: properties,
