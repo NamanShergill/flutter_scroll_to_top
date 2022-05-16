@@ -132,10 +132,10 @@ class ScrollWrapper extends StatefulWidget {
   final PromptAnimation promptAnimationType;
 
   @override
-  _ScrollWrapperState createState() => _ScrollWrapperState();
+  ScrollWrapperState createState() => ScrollWrapperState();
 }
 
-class _ScrollWrapperState extends State<ScrollWrapper> {
+class ScrollWrapperState extends State<ScrollWrapper> {
   late PromptButtonTheme _promptTheme;
   late ScrollController _scrollController;
   late Alignment _promptAlignment;
@@ -288,7 +288,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   bool _scrollTopAtOffset = false;
 
-  void _scrollToTop() async {
+  void scrollToTop() async {
     widget.onPromptTap?.call();
     await _scrollController.animateTo(
       _position.minScrollExtent,
@@ -327,7 +327,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
             curve: widget.promptAnimationCurve,
             alignment: _promptAlignment,
             child: widget.promptReplacementBuilder != null
-                ? widget.promptReplacementBuilder!(context, _scrollToTop)
+                ? widget.promptReplacementBuilder!(context, scrollToTop)
                 : Padding(
                     padding: _promptTheme.padding,
                     child: Material(
@@ -340,7 +340,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                           Theme.of(context).appBarTheme.backgroundColor ??
                           Theme.of(context).primaryColor,
                       child: InkWell(
-                        onTap: _scrollToTop,
+                        onTap: scrollToTop,
                         child: Padding(
                           padding: _promptTheme.iconPadding,
                           child: _promptTheme.icon ??

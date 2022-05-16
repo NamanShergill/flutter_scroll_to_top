@@ -1,4 +1,4 @@
-## [2.2.1-beta] - 16 May 2022.
+## [2.2.2-beta] - 16 May 2022.
 - Fixed prompt not disappearing on reverse scroll.
 
 ## [2.2.0-beta] - 16 May 2022.

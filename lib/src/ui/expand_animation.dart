@@ -19,10 +19,10 @@ class AnimatePrompt extends StatefulWidget {
   final PromptAnimation animType;
 
   @override
-  _AnimatePromptState createState() => _AnimatePromptState();
+  AnimatePromptState createState() => AnimatePromptState();
 }
 
-class _AnimatePromptState extends State<AnimatePrompt>
+class AnimatePromptState extends State<AnimatePrompt>
     with SingleTickerProviderStateMixin {
   late AnimationController expandController;
   late Animation<double> animation;

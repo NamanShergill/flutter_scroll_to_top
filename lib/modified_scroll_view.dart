@@ -48,12 +48,12 @@ abstract class ScrollViewCustom extends ScrollView {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> slivers = buildSlivers(context);
-    final AxisDirection axisDirection = getDirection(context);
+    final slivers = buildSlivers(context);
+    final axisDirection = getDirection(context);
 
-    final ScrollController? scrollController =
+    final scrollController =
         primary ? PrimaryScrollController.of(context) : controller;
-    final Scrollable scrollable = Scrollable(
+    final scrollable = Scrollable(
       key: scrollStateKey,
       dragStartBehavior: dragStartBehavior,
       axisDirection: axisDirection,
@@ -62,19 +62,19 @@ abstract class ScrollViewCustom extends ScrollView {
       scrollBehavior: scrollBehavior,
       semanticChildCount: semanticChildCount,
       restorationId: restorationId,
-      viewportBuilder: (BuildContext context, ViewportOffset offset) {
+      viewportBuilder: (context, offset) {
         return buildViewport(context, offset, axisDirection, slivers);
       },
     );
-    final Widget scrollableResult = primary && scrollController != null
+    final scrollableResult = primary && scrollController != null
         ? PrimaryScrollController.none(child: scrollable)
         : scrollable;
 
     if (keyboardDismissBehavior == ScrollViewKeyboardDismissBehavior.onDrag) {
       return NotificationListener<ScrollUpdateNotification>(
         child: scrollableResult,
-        onNotification: (ScrollUpdateNotification notification) {
-          final FocusScopeNode focusScope = FocusScope.of(context);
+        onNotification: (notification) {
+          final focusScope = FocusScope.of(context);
           if (notification.dragDetails != null && focusScope.hasFocus) {
             focusScope.unfocus();
           }
@@ -299,15 +299,15 @@ abstract class BoxScrollView extends ScrollViewCustom {
 
   @override
   List<Widget> buildSlivers(BuildContext context) {
-    Widget sliver = buildChildLayout(context);
-    EdgeInsetsGeometry? effectivePadding = padding;
+    var sliver = buildChildLayout(context);
+    var effectivePadding = padding;
     if (padding == null) {
-      final MediaQueryData? mediaQuery = MediaQuery.maybeOf(context);
+      final mediaQuery = MediaQuery.maybeOf(context);
       if (mediaQuery != null) {
         // Automatically pad sliver with padding from MediaQuery.
-        final EdgeInsets mediaQueryHorizontalPadding =
+        final mediaQueryHorizontalPadding =
             mediaQuery.padding.copyWith(top: 0.0, bottom: 0.0);
-        final EdgeInsets mediaQueryVerticalPadding =
+        final mediaQueryVerticalPadding =
             mediaQuery.padding.copyWith(left: 0.0, right: 0.0);
         // Consume the main axis padding with SliverPadding.
         effectivePadding = scrollDirection == Axis.vertical
@@ -325,8 +325,9 @@ abstract class BoxScrollView extends ScrollViewCustom {
       }
     }
 
-    if (effectivePadding != null)
+    if (effectivePadding != null) {
       sliver = SliverPadding(padding: effectivePadding, sliver: sliver);
+    }
     return <Widget>[sliver];
   }
 
@@ -889,25 +890,17 @@ class ListView extends BoxScrollView {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
-  })  : assert(itemBuilder != null),
-        assert(separatorBuilder != null),
-        assert(itemCount != null && itemCount >= 0),
+  })  : assert(itemCount >= 0),
         itemExtent = null,
         prototypeItem = null,
         childrenDelegate = SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            final int itemIndex = index ~/ 2;
+          (context, index) {
+            final itemIndex = index ~/ 2;
             final Widget widget;
             if (index.isEven) {
               widget = itemBuilder(context, itemIndex);
             } else {
               widget = separatorBuilder(context, itemIndex);
-              assert(() {
-                if (widget == null) {
-                  throw FlutterError('separatorBuilder cannot return null.');
-                }
-                return true;
-              }());
             }
             return widget;
           },
@@ -916,7 +909,7 @@ class ListView extends BoxScrollView {
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
           addSemanticIndexes: addSemanticIndexes,
-          semanticIndexCallback: (Widget _, int index) {
+          semanticIndexCallback: (_, index) {
             return index.isEven ? index ~/ 2 : null;
           },
         ),
@@ -1037,8 +1030,7 @@ class ListView extends BoxScrollView {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
-  })  : assert(childrenDelegate != null),
-        assert(
+  })  : assert(
           itemExtent == null || prototypeItem == null,
           'You can only pass itemExtent or prototypeItem, not both',
         ),
@@ -1386,8 +1378,7 @@ class GridView extends BoxScrollView {
     ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
-  })  : assert(gridDelegate != null),
-        childrenDelegate = SliverChildListDelegate(
+  })  : childrenDelegate = SliverChildListDelegate(
           children,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
@@ -1448,8 +1439,7 @@ class GridView extends BoxScrollView {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
-  })  : assert(gridDelegate != null),
-        childrenDelegate = SliverChildBuilderDelegate(
+  })  : childrenDelegate = SliverChildBuilderDelegate(
           itemBuilder,
           findChildIndexCallback: findChildIndexCallback,
           childCount: itemCount,
@@ -1493,9 +1483,7 @@ class GridView extends BoxScrollView {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
-  })  : assert(gridDelegate != null),
-        assert(childrenDelegate != null),
-        super(
+  }) : super(
           properties: properties,
           key: key,
           physics: physics,

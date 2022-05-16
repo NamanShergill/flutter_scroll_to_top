@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BasicPrompt(),
+                          builder: (context) => const BasicPrompt(),
                         ));
                       },
                       child: const Text('Basic Prompt'),
@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ThemedPrompt(),
+                          builder: (context) => const ThemedPrompt(),
                         ));
                       },
                       child: const Text('Themed Prompt'),
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CustomPrompt(),
+                          builder: (context) => const CustomPrompt(),
                         ));
                       },
                       child: const Text('Custom Prompt'),
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => NestedScrollViewExample(),
+                          builder: (context) => const NestedScrollViewExample(),
                         ));
                       },
                       child: const Text('NestedScrollView Implementation'),
