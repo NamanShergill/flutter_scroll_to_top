@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
 typedef ReplacementBuilder = Widget Function(
@@ -212,23 +211,26 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   double? _currentScrollUpOffset;
   double? _currentScrollDownOffset;
 
+  ScrollPosition get _position =>
+      _scrollStateKey.currentState?.position ?? _scrollController.position;
+
   void _setupListener() {
     _scrollController.addListener(() {
-      if (widget.alwaysVisibleAtOffset) {
+      if (widget.alwaysVisibleAtOffset || _scrollTopAtOffset) {
         _checkState();
         return;
       }
-      final direction = _scrollController.position.userScrollDirection;
+      final direction = _position.userScrollDirection;
       if (direction == ScrollDirection.forward) {
-        _currentScrollUpOffset ??= _scrollController.offset;
-        if (_currentScrollUpOffset! - _scrollController.offset >
+        _currentScrollUpOffset ??= _position.pixels;
+        if (_currentScrollUpOffset! - _position.pixels >
             widget.scrollOffsetUntilVisible) {
           _checkState();
           _currentScrollDownOffset = null;
         }
       } else {
-        _currentScrollDownOffset ??= _scrollController.offset;
-        if (_scrollController.offset - _currentScrollDownOffset! >
+        _currentScrollDownOffset ??= _position.pixels;
+        if (_position.pixels - _currentScrollDownOffset! >
             widget.scrollOffsetUntilHide) {
           if (mounted) {
             setState(() {
@@ -243,14 +245,13 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   }
 
   void _checkState() {
-    if (_scrollController.offset > widget.enabledAtOffset &&
-        !_scrollTopAtOffset) {
+    if (_position.pixels > widget.enabledAtOffset && !_scrollTopAtOffset) {
       if (mounted) {
         setState(() {
           _scrollTopAtOffset = true;
         });
       }
-    } else if (_scrollController.offset <= widget.enabledAtOffset &&
+    } else if (_position.pixels <= widget.enabledAtOffset &&
         _scrollTopAtOffset) {
       if (mounted) {
         setState(() {
@@ -265,7 +266,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
   void _scrollToTop() async {
     widget.onPromptTap?.call();
     await _scrollController.animateTo(
-      _scrollController.position.minScrollExtent,
+      _position.minScrollExtent,
       duration: widget.scrollToTopDuration,
       curve: widget.scrollToTopCurve,
     );
@@ -276,15 +277,19 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
+  final GlobalKey<ScrollableState> _scrollStateKey =
+      GlobalKey<ScrollableState>();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         widget.builder(
           context,
-          ScrollViewProperties(
+          ScrollViewProperties._generateProperties(
               reverse: widget.reverse,
               primary: widget.primary,
+              scrollStateKey: _scrollStateKey,
               scrollDirection: widget.scrollDirection,
               scrollController: _scrollController),
         ),
@@ -360,16 +365,18 @@ class PromptButtonTheme {
 }
 
 class ScrollViewProperties {
-  const ScrollViewProperties(
+  const ScrollViewProperties._generateProperties(
       {required this.reverse,
       required this.primary,
       required this.scrollDirection,
-      required ScrollController scrollController})
+      required ScrollController scrollController,
+      required this.scrollStateKey})
       : _scrollController = scrollController;
   final ScrollController _scrollController;
   final bool reverse;
   final bool primary;
   final Axis scrollDirection;
+  final GlobalKey<ScrollableState> scrollStateKey;
 
   ScrollController? get scrollController => primary ? null : _scrollController;
 }
