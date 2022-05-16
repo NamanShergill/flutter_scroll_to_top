@@ -139,13 +139,46 @@ ScrollWrapper(
 ```
 <a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117236-2e55ae80-9fbb-11eb-95c8-c8467797a877.gif" width="300" ></a>
 
-## NestedScrollView Implementation
+---
 
-The implementation is similar, just wrap your scrollable body with the `ScrollWrapper`.
-However, ***DO NOT*** pass a `scrollController` to the `ScrollWrapper` in this case, similar to how
-you are not supposed to pass it to a ScrollView under a NestedScrollView.
+### I recieve the error `'_positions.length == 1': ScrollController attached to multiple scroll views`, how do I fix it?
 
-[Check the example for code.](https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart)
+[This is a limitation of the way Flutter handles multiple scrollables listening to the same ScrollController.](https://github.com/flutter/flutter/issues/36419)
+If you are receiving this error (likely due to multiple scrollables under a NestedScrollView), this library bundles a modified version of the scrollviews which would fix this issue.
 
-<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart"><img src="https://user-images.githubusercontent.com/33877135/115117240-3281cc00-9fbb-11eb-8525-cbca1d64e902.gif" width="300" ></a>
+To use them, add the following import:
 
+```dart
+import 'package:flutter_scroll_to_top/modified_scroll_view.dart' as scrollview;
+```
+
+Then replace your scrollview in the following way:
+
+```dart
+// Before
+ScrollWrapper(
+    builder: (context, properties) => ListView.builder(
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+            ),
+        ),
+    ),
+)
+
+//After
+ScrollWrapper(
+    builder: (context, properties) => scrollview.ListView.builder(
+        properties: properties,
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+            ),
+        ),
+    ),
+)
+```
