@@ -1,3 +1,6 @@
+## [2.2.3-beta] - 16 May 2022.
+- Added `AnimatedList`, `ReorderableList`, `SingleChildScrollView` to modified scrollviews.
+
 ## [2.2.2-beta] - 16 May 2022.
 - Fixed prompt not disappearing on reverse scroll.
 

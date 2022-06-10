@@ -1,5 +1,7 @@
 # flutter_scroll_to_top
 
+[![Pub](https://img.shields.io/pub/v/flutter_scroll_to_top.svg?include_prereleases)](https://pub.dev/packages/flutter_scroll_to_top)
+
 A wrapper to show a scroll to top prompt to the user on ScrollView widgets.
 
 ## Installing
@@ -8,7 +10,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^2.2.2
+  flutter_scroll_to_top: ^2.2.3-beta
 ```
       
 Import the package
@@ -149,7 +151,7 @@ If you are receiving this error (likely due to multiple scrollables under a Nest
 To use them, add the following import:
 
 ```dart
-import 'package:flutter_scroll_to_top/modified_scroll_view.dart' as scrollview;
+import 'package:flutter_scroll_to_top/scroll_view.dart' as scrollview;
 ```
 
 Then replace your scrollview in the following way:
