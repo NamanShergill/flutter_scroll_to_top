@@ -1,4 +1,4 @@
-## [2.2.3-beta] - 16 May 2022.
+## [2.2.4-beta] - 11 June 2022.
 - Added `AnimatedList`, `ReorderableList`, `SingleChildScrollView` to modified scrollviews.
 
 ## [2.2.2-beta] - 16 May 2022.
