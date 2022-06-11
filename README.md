@@ -10,7 +10,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^2.2.4-beta
+  flutter_scroll_to_top: ^2.2.4
 ```
       
 Import the package

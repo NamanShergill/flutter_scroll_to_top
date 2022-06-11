@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide CustomScrollView, ListView;
+import 'package:flutter/material.dart'
+    hide CustomScrollView, ListView, AnimatedListState;
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_scroll_to_top/src/modified_scrolls/scroll_view.dart';
 import 'package:flutter_scroll_to_top/src/scroll_wrapper.dart';
 
@@ -60,7 +62,7 @@ class _ActiveItem implements Comparable<_ActiveItem> {
 class AnimatedList extends StatefulWidget {
   /// Creates a scrolling container that animates items when they are inserted
   /// or removed.
-  const AnimatedList({
+  AnimatedList({
     Key? key,
     required this.itemBuilder,
     this.initialItemCount = 0,
@@ -71,6 +73,8 @@ class AnimatedList extends StatefulWidget {
     this.clipBehavior = Clip.hardEdge,
   })  : assert(itemBuilder != null),
         assert(initialItemCount != null && initialItemCount >= 0),
+        assert(key is! GlobalKey<material.AnimatedListState>,
+            'Ensure that the GlobalKey of the AnimatedListState from the modified_scroll_view import is being passed.'),
         super(key: key);
 
   final ScrollViewProperties properties;
