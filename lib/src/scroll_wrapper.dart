@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
 typedef ReplacementBuilder = Widget Function(
@@ -133,10 +132,10 @@ class ScrollWrapper extends StatefulWidget {
   final PromptAnimation promptAnimationType;
 
   @override
-  _ScrollWrapperState createState() => _ScrollWrapperState();
+  ScrollWrapperState createState() => ScrollWrapperState();
 }
 
-class _ScrollWrapperState extends State<ScrollWrapper> {
+class ScrollWrapperState extends State<ScrollWrapper> {
   late PromptButtonTheme _promptTheme;
   late ScrollController _scrollController;
   late Alignment _promptAlignment;
@@ -209,48 +208,75 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
-  double? _currentScrollUpOffset;
-  double? _currentScrollDownOffset;
+  double? _currentScrollForwardOffset;
+  double? _currentScrollReverseOffset;
+
+  /// Get position of a child [ScrollViewCustom] if it exists.
+  ScrollPosition get _position =>
+      _scrollStateKey.currentState?.position ??
+      _scrollController.positions.first;
+
+  void _listen() {
+    // Check state if:
+    // - Either the *alwaysVisibleAtOffset* parameter is set to true.
+    // - Or the prompt is currently visible and the position is less than the
+    //   offset limit for it to be visible.
+    if (widget.alwaysVisibleAtOffset ||
+        (_scrollTopAtOffset &&
+            _position.pixels < widget.scrollOffsetUntilVisible)) {
+      _checkState();
+      return;
+    }
+    final direction = _position.userScrollDirection;
+    if (direction == ScrollDirection.forward) {
+      // Save the point where user starts scrolling forward.
+      _currentScrollForwardOffset ??= _position.pixels;
+
+      // Check state if user scrolled the *scrollOffsetUntilVisible*
+      // value since they started.
+      if (_currentScrollForwardOffset! - _position.pixels >
+          widget.scrollOffsetUntilVisible) {
+        _checkState();
+        // Set *_currentScrollReverseOffset* to null as user scrolled forward.
+        _currentScrollReverseOffset = null;
+      }
+    } else {
+      // Save the point where user starts scrolling in reverse.
+      _currentScrollReverseOffset ??= _position.pixels;
+      // Check state if user scrolled the *scrollOffsetUntilHide*
+      // value since they started.
+      if (_position.pixels - _currentScrollReverseOffset! >
+          widget.scrollOffsetUntilHide) {
+        if (mounted) {
+          setState(() {
+            _scrollTopAtOffset = false;
+          });
+        }
+        // Set both to null as user scrolled in reverse.
+        _currentScrollForwardOffset = null;
+        _currentScrollReverseOffset = null;
+      }
+    }
+  }
 
   void _setupListener() {
     _scrollController.addListener(() {
-      if (widget.alwaysVisibleAtOffset) {
-        _checkState();
-        return;
-      }
-      final direction = _scrollController.position.userScrollDirection;
-      if (direction == ScrollDirection.forward) {
-        _currentScrollUpOffset ??= _scrollController.offset;
-        if (_currentScrollUpOffset! - _scrollController.offset >
-            widget.scrollOffsetUntilVisible) {
-          _checkState();
-          _currentScrollDownOffset = null;
-        }
-      } else {
-        _currentScrollDownOffset ??= _scrollController.offset;
-        if (_scrollController.offset - _currentScrollDownOffset! >
-            widget.scrollOffsetUntilHide) {
-          if (mounted) {
-            setState(() {
-              _scrollTopAtOffset = false;
-            });
-          }
-          _currentScrollUpOffset = null;
-          _currentScrollDownOffset = null;
-        }
+      try {
+        _listen();
+      } catch (e) {
+        debugPrint(e.toString());
       }
     });
   }
 
   void _checkState() {
-    if (_scrollController.offset > widget.enabledAtOffset &&
-        !_scrollTopAtOffset) {
+    if (_position.pixels > widget.enabledAtOffset && !_scrollTopAtOffset) {
       if (mounted) {
         setState(() {
           _scrollTopAtOffset = true;
         });
       }
-    } else if (_scrollController.offset <= widget.enabledAtOffset &&
+    } else if (_position.pixels <= widget.enabledAtOffset &&
         _scrollTopAtOffset) {
       if (mounted) {
         setState(() {
@@ -262,10 +288,10 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
 
   bool _scrollTopAtOffset = false;
 
-  void _scrollToTop() async {
+  void scrollToTop() async {
     widget.onPromptTap?.call();
     await _scrollController.animateTo(
-      _scrollController.position.minScrollExtent,
+      _position.minScrollExtent,
       duration: widget.scrollToTopDuration,
       curve: widget.scrollToTopCurve,
     );
@@ -276,15 +302,19 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
     }
   }
 
+  final GlobalKey<ScrollableState> _scrollStateKey =
+      GlobalKey<ScrollableState>();
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         widget.builder(
           context,
-          ScrollViewProperties(
+          ScrollViewProperties._generateProperties(
               reverse: widget.reverse,
               primary: widget.primary,
+              scrollStateKey: _scrollStateKey,
               scrollDirection: widget.scrollDirection,
               scrollController: _scrollController),
         ),
@@ -297,7 +327,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
             curve: widget.promptAnimationCurve,
             alignment: _promptAlignment,
             child: widget.promptReplacementBuilder != null
-                ? widget.promptReplacementBuilder!(context, _scrollToTop)
+                ? widget.promptReplacementBuilder!(context, scrollToTop)
                 : Padding(
                     padding: _promptTheme.padding,
                     child: Material(
@@ -310,7 +340,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                           Theme.of(context).appBarTheme.backgroundColor ??
                           Theme.of(context).primaryColor,
                       child: InkWell(
-                        onTap: _scrollToTop,
+                        onTap: scrollToTop,
                         child: Padding(
                           padding: _promptTheme.iconPadding,
                           child: _promptTheme.icon ??
@@ -360,16 +390,18 @@ class PromptButtonTheme {
 }
 
 class ScrollViewProperties {
-  const ScrollViewProperties(
+  const ScrollViewProperties._generateProperties(
       {required this.reverse,
       required this.primary,
       required this.scrollDirection,
-      required ScrollController scrollController})
+      required ScrollController scrollController,
+      required this.scrollStateKey})
       : _scrollController = scrollController;
   final ScrollController _scrollController;
   final bool reverse;
   final bool primary;
   final Axis scrollDirection;
+  final GlobalKey<ScrollableState> scrollStateKey;
 
   ScrollController? get scrollController => primary ? null : _scrollController;
 }

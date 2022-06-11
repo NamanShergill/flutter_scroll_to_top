@@ -1,5 +1,7 @@
 # flutter_scroll_to_top
 
+[![Pub](https://img.shields.io/pub/v/flutter_scroll_to_top.svg?include_prereleases)](https://pub.dev/packages/flutter_scroll_to_top)
+
 A wrapper to show a scroll to top prompt to the user on ScrollView widgets.
 
 ## Installing
@@ -8,7 +10,7 @@ Add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_scroll_to_top: ^2.1.1
+  flutter_scroll_to_top: ^2.2.4
 ```
       
 Import the package
@@ -139,13 +141,48 @@ ScrollWrapper(
 ```
 <a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/basic_prompt.dart"><img src="https://user-images.githubusercontent.com/33877135/115117236-2e55ae80-9fbb-11eb-95c8-c8467797a877.gif" width="300" ></a>
 
-## NestedScrollView Implementation
+---
 
-The implementation is similar, just wrap your scrollable body with the `ScrollWrapper`.
-However, ***DO NOT*** pass a `scrollController` to the `ScrollWrapper` in this case, similar to how
-you are not supposed to pass it to a ScrollView under a NestedScrollView.
+### The prompt shows up inconsistently if I have multipe scrollviews listening to the same scroll controller, how do I fix it?
 
-[Check the example for code.](https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart)
+[This is a limitation of the way Flutter handles this scenario.](https://github.com/flutter/flutter/issues/36419)
+If you are receiving this error (likely due to multiple scrollables under a NestedScrollView), this library bundles a modified version of the scrollviews which would fix this issue.
 
-<a href="https://github.com/NamanShergill/flutter_scroll_to_top/blob/main/example/lib/pages/nested_scroll_view_example.dart"><img src="https://user-images.githubusercontent.com/33877135/115117240-3281cc00-9fbb-11eb-8525-cbca1d64e902.gif" width="300" ></a>
+To use them, add the following import:
 
+```dart
+import 'package:flutter_scroll_to_top/scroll_view.dart' as scrollview;
+```
+
+Then replace your scrollview in the following way:
+
+**Before**
+```dart
+ScrollWrapper(
+    builder: (context, properties) => ListView.builder(
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+            ),
+        ),
+    ),
+)
+```
+
+**After**
+```dart
+ScrollWrapper(
+    builder: (context, properties) => scrollview.ListView.builder(
+        properties: properties,
+        itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+                title: Text('Tile $index'),
+                tileColor: Colors.grey.shade200,
+            ),
+        ),
+    ),
+)
+```

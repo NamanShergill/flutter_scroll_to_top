@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 class BasicPrompt extends StatelessWidget {
+  const BasicPrompt({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
