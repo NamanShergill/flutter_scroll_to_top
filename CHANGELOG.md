@@ -1,3 +1,7 @@
+## [2.3.0] - 25 October 2022.
+- Make primary bool nullable in modified scrollviews for flutter 3.3.0.
+
+
 ## [2.2.4] - 11 June 2022.
 - Bundled modified scrollviews to work around PrimaryScrollController limitations.
 

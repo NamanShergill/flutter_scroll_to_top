@@ -51,8 +51,13 @@ abstract class ScrollViewCustom extends ScrollView {
     final slivers = buildSlivers(context);
     final axisDirection = getDirection(context);
 
+    final effectivePrimary = primary ??
+        controller == null &&
+            PrimaryScrollController.shouldInherit(context, scrollDirection);
+
     final scrollController =
-        primary ? PrimaryScrollController.of(context) : controller;
+        effectivePrimary ? PrimaryScrollController.of(context) : controller;
+
     final scrollable = Scrollable(
       key: scrollStateKey,
       dragStartBehavior: dragStartBehavior,
@@ -66,7 +71,8 @@ abstract class ScrollViewCustom extends ScrollView {
         return buildViewport(context, offset, axisDirection, slivers);
       },
     );
-    final scrollableResult = primary && scrollController != null
+    final scrollableResult = effectivePrimary && scrollController != null
+        // Further descendant ScrollViews will not inherit the same PrimaryScrollController
         ? PrimaryScrollController.none(child: scrollable)
         : scrollable;
 
