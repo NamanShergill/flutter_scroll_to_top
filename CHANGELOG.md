@@ -1,4 +1,4 @@
-## [2.3.0-dev] - 2 September 2022.
+## [2.3.0] - 25 October 2022.
 - Make primary bool nullable in modified scrollviews for flutter 3.3.0.
 
 
