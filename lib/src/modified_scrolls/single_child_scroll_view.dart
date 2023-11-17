@@ -347,6 +347,7 @@ class _RenderSingleChildViewport extends RenderBox
 
   AxisDirection get axisDirection => _axisDirection;
   AxisDirection _axisDirection;
+
   set axisDirection(AxisDirection value) {
     assert(value != null);
     if (value == _axisDirection) return;
@@ -358,6 +359,7 @@ class _RenderSingleChildViewport extends RenderBox
 
   ViewportOffset get offset => _offset;
   ViewportOffset _offset;
+
   set offset(ViewportOffset value) {
     assert(value != null);
     if (value == _offset) return;
@@ -370,6 +372,7 @@ class _RenderSingleChildViewport extends RenderBox
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
   double get cacheExtent => _cacheExtent;
   double _cacheExtent;
+
   set cacheExtent(double value) {
     assert(value != null);
     if (value == _cacheExtent) return;
@@ -382,6 +385,7 @@ class _RenderSingleChildViewport extends RenderBox
   /// Defaults to [Clip.none], and must not be null.
   Clip get clipBehavior => _clipBehavior;
   Clip _clipBehavior = Clip.none;
+
   set clipBehavior(Clip value) {
     assert(value != null);
     if (value != _clipBehavior) {
@@ -593,11 +597,20 @@ class _RenderSingleChildViewport extends RenderBox
   }
 
   @override
-  RevealedOffset getOffsetToReveal(RenderObject target, double alignment,
-      {Rect? rect}) {
+  RevealedOffset getOffsetToReveal(
+    RenderObject target,
+    double alignment, {
+    Rect? rect,
+    Axis? axis,
+  }) {
+    // One dimensional viewport has only one axis, override if it was
+    // provided/may be mismatched.
+    axis = this.axis;
+
     rect ??= target.paintBounds;
-    if (target is! RenderBox)
+    if (target is! RenderBox) {
       return RevealedOffset(offset: offset.pixels, rect: rect);
+    }
 
     final RenderBox targetBox = target;
     final Matrix4 transform = targetBox.getTransformTo(child);
@@ -608,28 +621,23 @@ class _RenderSingleChildViewport extends RenderBox
     final double targetMainAxisExtent;
     final double mainAxisExtent;
 
-    assert(axisDirection != null);
     switch (axisDirection) {
       case AxisDirection.up:
         mainAxisExtent = size.height;
         leadingScrollOffset = contentSize.height - bounds.bottom;
         targetMainAxisExtent = bounds.height;
-        break;
       case AxisDirection.right:
         mainAxisExtent = size.width;
         leadingScrollOffset = bounds.left;
         targetMainAxisExtent = bounds.width;
-        break;
       case AxisDirection.down:
         mainAxisExtent = size.height;
         leadingScrollOffset = bounds.top;
         targetMainAxisExtent = bounds.height;
-        break;
       case AxisDirection.left:
         mainAxisExtent = size.width;
         leadingScrollOffset = contentSize.width - bounds.right;
         targetMainAxisExtent = bounds.width;
-        break;
     }
 
     final double targetOffset = leadingScrollOffset -
