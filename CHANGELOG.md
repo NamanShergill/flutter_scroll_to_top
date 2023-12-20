@@ -1,25 +1,36 @@
+## [2.4.0] - 17 November 2023.
+
+- Fixed Modified `SingleChildScrollView`.
+
 ## [2.3.0] - 25 October 2022.
+
 - Make primary bool nullable in modified scrollviews for flutter 3.3.0.
 
-
 ## [2.2.4] - 11 June 2022.
+
 - Bundled modified scrollviews to work around PrimaryScrollController limitations.
 
 ## [2.1.1] - 22 November 2021.
+
 - Fixed prompt not hiding on tap.
 
 ## [2.1.0] - 22 November 2021.
+
 - Added `scrollOffsetUntilHide` parameter.
 - Slightly changed default values of parameters.
 
 ## [2.0.1] - 22 November 2021.
+
 - ***BREAKING CHANGE*** - Replaced `child` parameter with `builder`.
 - ***BREAKING CHANGE*** - Renamed `promptScrollOffset` to `enabledAtOffset`.
-- Added `scrollDirection`, `primary`, `reverse`, `scrollOffsetUntilVisible` and `alwaysVisibleAtOffset` parameters.
+- Added `scrollDirection`, `primary`, `reverse`, `scrollOffsetUntilVisible`
+  and `alwaysVisibleAtOffset` parameters.
 - Added `onPromptTap` callback.
-- Made `scrollController` parameter nullable and added `PrimaryScrollController.of(context)` fallback.
+- Made `scrollController` parameter nullable and added `PrimaryScrollController.of(context)`
+  fallback.
 - Better behaviour for horizontal ScrollViews.
-- Changed default behaviour to only show prompt on upwards scroll. Can be disabled by setting `alwaysVisibleAtOffset` to true.
+- Changed default behaviour to only show prompt on upwards scroll. Can be disabled by
+  setting `alwaysVisibleAtOffset` to true.
 - Made `ScrollWrapper` and `PromptButtonTheme` constructors const.
 
 ## [1.2.0] - 21 November 2021.

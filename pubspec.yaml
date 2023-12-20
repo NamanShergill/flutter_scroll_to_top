@@ -1,7 +1,7 @@
 name: flutter_scroll_to_top
 description: A package that provides a simple wrapper to wrap your scrollable widgets in, that lets
   you show a scroll to top prompt to the user when they scroll.
-version: 2.3.0
+version: 2.4.0
 homepage: https://github.com/NamanShergill/flutter_scroll_to_top
 
 environment:
