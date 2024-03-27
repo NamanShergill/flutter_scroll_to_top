@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_to_top/src/ui/expand_animation.dart';
 
@@ -138,7 +137,7 @@ class _ScrollWrapperState extends State<ScrollWrapper> {
                             child: Material(
                               type: MaterialType.circle,
                               color: promptTheme.color ??
-                                  Theme.of(context).accentColor,
+                                  Theme.of(context).colorScheme.secondary,
                               child: InkWell(
                                 borderRadius: widget.borderRadius,
                                 onTap: () {

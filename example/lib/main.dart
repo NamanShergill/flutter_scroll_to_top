@@ -28,63 +28,61 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text('Scroll to top prompt examples'),
-          ),
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BasicPrompt(),
-                        ));
-                      },
-                      child: Text('Basic Prompt'),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Scroll to top prompt examples'),
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BasicPrompt(),
+                      ));
+                    },
+                    child: Text('Basic Prompt'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ThemedPrompt(),
+                      ));
+                    },
+                    child: Text('Themed Prompt'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CustomPrompt(),
+                      ));
+                    },
+                    child: Text('Custom Prompt'),
+                  ),
+                  Flexible(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      endIndent: 100,
+                      indent: 100,
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ThemedPrompt(),
-                        ));
-                      },
-                      child: Text('Themed Prompt'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CustomPrompt(),
-                        ));
-                      },
-                      child: Text('Custom Prompt'),
-                    ),
-                    Flexible(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                        endIndent: 100,
-                        indent: 100,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => NestedScrollViewExample(),
-                        ));
-                      },
-                      child: Text('NestedScrollView Implementation'),
-                    ),
-                  ],
-                ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => NestedScrollViewExample(),
+                      ));
+                    },
+                    child: Text('NestedScrollView Implementation'),
+                  ),
+                ],
               ),
-            ],
-          )),
-    );
+            ),
+          ],
+        ));
   }
 }
